@@ -11,7 +11,7 @@ Additional Dependencies: random
 -------------------------------
 
     This file defines the BA model / graph and the methods needed for it. 
-    It includes 6 methods:
+    It includes 9 methods:
         1. initialise_graph: creates a graph of a given size and m
         2. add_edges: connects a source vertex to a destination vertex in the graph
         3. update_degrees: updates the dictionary holding the degrees of each vertex
@@ -20,6 +20,8 @@ Additional Dependencies: random
         6. update_probabilities_ra: updates the probability of choosing a vertex using Random Attachment
         7. update_probabilities_mixed: updates the probability of choosing a vertex using Mixed Attachment
         8. add_vertex: adds a new vertex to a graph and connects it to other vertices using a given probability dist
+        9. save_graph: saves a graph in a format compatible with networks so that it can be plotted
+        10. deg_dist_theoretical: theoretical degree distribution
 """
 
 
@@ -111,6 +113,11 @@ def save_graph(graph, PATH_NAME):
             for x in edges[i]:
                 word += str(x) + ' '
             file.write(str(nodes[i]) + ' ' + str(word)+'\n')
+
+
+def deg_dist_theoretical(k, m=2):
+    # theoretical degree distribution
+    return (2*m*(m+1))/(k*(k+1)*(k+2))
 
 
 if __name__ == '__main__':
