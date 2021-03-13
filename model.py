@@ -21,7 +21,7 @@ Additional Dependencies: random
         7. update_probabilities_mixed: updates the probability of choosing a vertex using Mixed Attachment
         8. add_vertex: adds a new vertex to a graph and connects it to other vertices using a given probability dist
         9. save_graph: saves a graph in a format compatible with networks so that it can be plotted
-        10. deg_dist_theoretical: theoretical degree distribution
+        10. deg_dist_theoretical: theoretical degree distribution, using Gamma functions (discrete model)
 """
 
 
