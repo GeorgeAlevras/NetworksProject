@@ -1,18 +1,8 @@
-import sys
-import time
-import pickle
+from logbin2020 import logbin
+import numpy as np
 
-my_list = [1, 2, 3]
-my_dict = {1:1, 2:2, 3:3}
+a = [0, 0, 0, 0, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 4, 4, 5, 5, 5, 6, 7, 7, 7, 7, 8, 8, 8, 9, 9, 9, 9, 9, 10, 10, 10, 10, 11, 11, 11, 11, 12, 12, 12, 12, 12, 13, 13, 13, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15]
 
-file = open('Files/save.txt', 'wb')
-for i in range(2):
-    pickle.dump(my_list, file)
-file.close()
-
-data = []
-file = open ('Files/save.txt', 'rb')
-for i in range(2):
-    data.append(pickle.load(file))
-
-print(data)
+x, y = logbin(a, scale=1.2)
+# print(x)
+# print(y)

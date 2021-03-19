@@ -1,4 +1,4 @@
-from model import initialise_graph, update_e, update_degrees, update_probabilities_pa, add_vertex, save_graph
+from model import initialise_graph, update_e, update_degrees, add_vertex, deg_dist_theoretical_pa, save_graph
 import numpy as np
 import argparse
 import sys
@@ -41,13 +41,10 @@ def test_adjacency_list():
     load = loading()
     print('\nTesting the adjacency list')
 
-    graph = initialise_graph(size=4, m=2)
-    degrees = update_degrees(graph)
-    e = update_e(degrees)
-    probabilities = update_probabilities_pa(graph, e)
-    
+    m = 3
+    graph, options = initialise_graph(size=m+1, m=m)
     for i in range(int(1e3)):
-        graph, e, degrees, probabilities = add_vertex(graph, probabilities, m=2, method='pa')
+        graph, options = add_vertex(graph, options, m=m)
         sys.stdout.write(next(load))
         sys.stdout.flush()
         sys.stdout.write('\b')
@@ -79,54 +76,18 @@ def test_adjacency_list():
 def test_average_degrees():
     """ Ensures that the average degree of a graph is approximately 2m when using preferential attachment """
 
-    load = loading()
+    ms = [2, 3, 4, 5]
+    degrees_avg = []
+    for m in ms:
+        graph, options = initialise_graph(size=m+1, m=m)
 
-    m = 2
-    graph = initialise_graph(size=4, m=2)
-    degrees = update_degrees(graph)
-    e = update_e(degrees)
-    probabilities = update_probabilities_pa(graph, e)
+        for i in range(int(1e3)):
+            graph, options = add_vertex(graph, options, m=m)
 
-    for i in range(int(1e3)):
-        graph, e, degrees_2, probabilities = add_vertex(graph, probabilities, m=m)
-        sys.stdout.write(next(load))
-        sys.stdout.flush()
-        sys.stdout.write('\b')
-
-    assert round(np.average(list(degrees_2.values()), 0)) == int(2*m)
-
-    m = 3
-    graph = initialise_graph(size=4, m=2)
-    degrees = update_degrees(graph)
-    e = update_e(degrees)
-    probabilities = update_probabilities_pa(graph, e)
-
-    for i in range(int(1e3)):
-        graph, e, degrees_3, probabilities = add_vertex(graph, probabilities, m=m, method='pa')
-        sys.stdout.write(next(load))
-        sys.stdout.flush()
-        sys.stdout.write('\b')
-    
-    assert round(np.average(list(degrees_3.values()), 0)) == int(2*m)
-
-    m = 4
-    graph = initialise_graph(size=4, m=2)
-    degrees = update_degrees(graph)
-    e = update_e(degrees)
-    probabilities = update_probabilities_pa(graph, e)
-
-    for i in range(int(1e3)):
-        graph, e, degrees_4, probabilities = add_vertex(graph, probabilities, m=m, method='pa')
-        sys.stdout.write(next(load))
-        sys.stdout.flush()
-        sys.stdout.write('\b')
-    print(' \r')
-
-    print('\nWith m=' + str(2) + ', Avg k: ', round(np.average(list(degrees_2.values())), 2))
-    print('With m=' + str(3) + ', Avg k: ', round(np.average(list(degrees_3.values())), 2))
-    print('With m=' + str(4) + ', Avg k: ', round(np.average(list(degrees_4.values())), 2))
-
-    assert round(np.average(list(degrees_4.values()), 0)) == int(2*m)
+        degrees = update_degrees(graph)
+        degrees_avg.append(round(np.average(list(degrees.values())), 2))
+        assert round(np.average(list(degrees.values()), 0)) == int(2*m)
+        print('\nWith m=' + str(m) + ', Avg k: ', round(np.average(list(degrees.values())), 2))
 
     print('\n***************************\nAverage Degree Tests PASSED\n***************************\n\n')
 
@@ -137,13 +98,11 @@ def plot_graph():
     load = loading()
     print('\nPlotting graph to check it')
 
-    graph = initialise_graph(size=4, m=2)
-    degrees = update_degrees(graph)
-    e = update_e(degrees)
-    probabilities = update_probabilities_pa(graph, e)
+    m = 3
+    graph, options = initialise_graph(size=m+1, m=m)
     
     for i in range(int(1e1)):
-        graph, e, degrees, probabilities = add_vertex(graph, probabilities, m=2, method='pa')
+        graph, options = add_vertex(graph, options, m=m)
 
         save_graph(graph, 'testing_graph.txt')
         g = nx.read_adjlist('testing_graph.txt')
@@ -162,19 +121,20 @@ def test_probabilities(compute=False, plot=True):
     """ Ensure that preferential attachment works correctly """
 
     if compute:
-        graph = initialise_graph(size=4, m=2)
-        degrees = update_degrees(graph)
-        e = update_e(degrees)
-        probabilities = update_probabilities_pa(graph, e)
+        m = 3
+        graph, options = initialise_graph(size=m+1, m=m)
         
         for i in range(int(16)):
-            graph, e, degrees, probabilities = add_vertex(graph, probabilities, m=2, method='pa')
+            graph, options = add_vertex(graph, options, m=m)
 
+        degrees = update_degrees(graph)
+        e = update_e(degrees)
+        probabilities = dict(zip(graph.keys(), [len(graph[k])/(2*e) for k in sorted(graph.keys())]))
+        
         save_graph(graph, 'testing_probabilities_graph.txt')
         file = open('testing_probabilities.txt', 'wb')
         pickle.dump(graph, file)
-        pickle.dump(e, file)
-        pickle.dump(degrees, file)
+        pickle.dump(options, file)
         pickle.dump(probabilities, file)
         file.close()
 
@@ -184,25 +144,26 @@ def test_probabilities(compute=False, plot=True):
 
         file = open('testing_probabilities.txt', 'rb')
         graph = pickle.load(file)
-        e = pickle.load(file)
-        degrees = pickle.load(file)
+        options = pickle.load(file)
         probabilities = pickle.load(file)
         file.close()
-
+        
         comparison = np.array(list(probabilities.values()))
-
+        
         probabilities_produced = {x: 0 for x in range(len(graph))}
-        for i in range(int(100000)):
-            graph_temp, e_temp, degrees_temp, probabilities_temp = add_vertex(graph, probabilities, m=1, method='pa')
+        for i in range(int(1000000)):
+            graph_temp, options_temp = add_vertex(graph, options, m=1)
             graph_use = graph_temp.copy()
             probabilities_produced[list(graph_use[len(graph_use)-1])[0]] += 1
             del graph[len(graph_temp)-1]
+            del options[len(options)-1]
+            del options[len(options)-1]
             sys.stdout.write(next(load))
             sys.stdout.flush()
             sys.stdout.write('\b')
         print(' \r')
 
-        probabilities_produced = np.array(list(probabilities_produced.values()))/100000
+        probabilities_produced = np.array(list(probabilities_produced.values()))/1000000
 
         assert np.array_equal(np.round(comparison, 1), np.round(probabilities_produced, 1))
         
@@ -226,7 +187,6 @@ def test_probabilities(compute=False, plot=True):
         plt.legend()
         plt.xlabel(r'$\it{Vertex}$', fontname='Times New Roman', fontsize=17)
         plt.ylabel(r'$\it{Attachment \: Probability}$', fontname='Times New Roman', fontsize=17)
-        # plt.minorticks_on()
         ax.tick_params(direction='in')
         ax.tick_params(which='minor', direction='in')
         plt.xticks(fontsize=12, fontname='Times New Roman')

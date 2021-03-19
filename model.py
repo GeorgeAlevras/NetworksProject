@@ -33,8 +33,13 @@ def initialise_graph(size=4, m=2):
         new_nodes = rnd.sample([x for x in range(len(graph)) if x!= i], m)  # connects each vertex to m randomly chosen vertices
         for j in new_nodes:
             add_edges(graph, i, j)  # connects each vertex with its new vertices
-    
-    return graph
+
+    options = []
+    for i in range(len(graph)):
+        for j in range(len(list(graph[i]))):
+            options.append(i)
+
+    return graph, options
 
 
 def add_edges(graph, source, destination):
@@ -53,53 +58,21 @@ def update_e(degrees):
     return int(sum(list(degrees.values()))/2)
 
 
-def update_probabilities_pa(graph, e):
-    # updates probabilities (using preferential attachment) for choosing a new vertex - as Π=k/2E
-    return dict(zip(graph.keys(), [len(graph[k])/(2*e) for k in sorted(graph.keys())]))
-
-
-def update_probabilities_ra(graph):
-    # updates probabilities (using preferential attachment) for choosing a new vertex - as Π=1/N
-    return dict(zip(graph.keys(), [1/len(graph.keys()) for k in graph.keys()]))
-
-
-def update_probabilities_mixed(graph, e, q=2/3):
-    # updates probabilities (using preferential attachment) for choosing a new vertex - as Π=qΠ_pa + (1-q)Π_ra
-    space = [0, 1]
-    prob = [q, 1-q]
-    choice = np.random.choice(space, size=1, p=prob)
-
-    if choice == 0:
-        return update_probabilities_pa(graph, e)
-    else:
-        return update_probabilities_ra(graph)
-
-
-def add_vertex(graph, probs, m=2, method='pa', q=2/3):
-    elements = list(graph.keys())  # nodes to choose from for new vertex
-    probabilities = list(probs.values())  # probabilities for each vertex
+def add_vertex(graph, options, m=2):
+    new_nodes = set()
+    while len(new_nodes) < m:
+        new_nodes.add(options[rnd.randint(0, len(options)-1)])
+    
     j = len(graph)  # index of new vertex - is always the length of the graph
     graph[len(graph)] = set()  # initialise adjacency values of new vertex as empty
 
-    # Choose m new vertices using given method - probability distribution
-    new_vertices = np.random.choice(elements, size=m, replace=False, p=probabilities)
-    for i in new_vertices:
-        add_edges(graph, j, i)  # connect new vertex edges with vertices chosen using probabilities
-    
-    degrees = update_degrees(graph)
-    e = update_e(degrees)
-    
-    if method == 'pa':  # preferential attachment
-        probabilities = update_probabilities_pa(graph, e)
-        return graph, e, degrees, probabilities
-    elif method == 'ra':  # random attachment
-        probabilities = update_probabilities_ra(graph)
-        return graph, e, degrees, probabilities
-    elif method == 'mixed':  # mixed attachment
-        probabilities = update_probabilities_mixed(graph, e, q)
-        return graph, e, degrees, probabilities
-    else:
-        raise ValueError("Not a valid probability method.")
+    new_nodes = list(new_nodes)
+    for i in new_nodes:
+        add_edges(graph, j, i)
+        options.append(j)
+        options.append(i)
+
+    return graph, options
 
 
 def save_graph(graph, PATH_NAME):
@@ -115,9 +88,13 @@ def save_graph(graph, PATH_NAME):
             file.write(str(nodes[i]) + ' ' + str(word)+'\n')
 
 
-def deg_dist_theoretical(k, m=2):
-    # theoretical degree distribution
+def deg_dist_theoretical_pa(k, m=2):
+    # theoretical degree distribution for preferential attachment
     return (2*m*(m+1))/(k*(k+1)*(k+2))
+
+
+def k_max_pa(N, m):
+    return (-1 + np.sqrt(1 + 4*N*m*(m+1))*0.5)
 
 
 if __name__ == '__main__':
