@@ -10,6 +10,7 @@ import pickle
 from collections import Counter
 import math
 import scipy.stats as st
+import pandas as pd
 
 """
 Georgios Alevras - 28/03/2021
@@ -42,7 +43,7 @@ def test_adjacency_list():
     print('\nTesting the adjacency list')
 
     m = 3
-    graph, options = initialise_graph(size=m+1, m=m)
+    graph, options = initialise_graph(size=m+1, m=m)  # Create complete graph of size = 4 (m=3)
     for i in range(int(1e3)):
         graph, options = add_vertex(graph, options, m=m)
         sys.stdout.write(next(load))
@@ -86,6 +87,7 @@ def test_average_degrees():
 
         degrees = update_degrees(graph)
         degrees_avg.append(round(np.average(list(degrees.values())), 2))
+        
         assert round(np.average(list(degrees.values()), 0)) == int(2*m)
         print('\nWith m=' + str(m) + ', Avg k: ', round(np.average(list(degrees.values())), 2))
 
@@ -122,7 +124,7 @@ def test_probabilities(compute=False, plot=True):
 
     if compute:
         m = 3
-        graph, options = initialise_graph(size=m+1, m=m)
+        graph, options = initialise_graph(size=m+1, m=m)  # Create complete graph of size = 4 (m=3)
         
         for i in range(int(16)):
             graph, options = add_vertex(graph, options, m=m)
@@ -148,24 +150,33 @@ def test_probabilities(compute=False, plot=True):
         probabilities = pickle.load(file)
         file.close()
         
+        # Probability of choosing each node based on final graph as produced in lines 129-130
         comparison = np.array(list(probabilities.values()))
         
-        probabilities_produced = {x: 0 for x in range(len(graph))}
-        for i in range(int(1000000)):
-            graph_temp, options_temp = add_vertex(graph, options, m=1)
-            graph_use = graph_temp.copy()
-            probabilities_produced[list(graph_use[len(graph_use)-1])[0]] += 1
-            del graph[len(graph_temp)-1]
-            del options[len(options)-1]
-            del options[len(options)-1]
-            sys.stdout.write(next(load))
-            sys.stdout.flush()
-            sys.stdout.write('\b')
+        big_list = []
+        for i in range(100):  # Repeat process 100 times to obtain avg and std
+            probabilities_produced = {x: 0 for x in range(len(graph))}
+            for i in range(int(100000)):  # Grow graph once with m=1 100,000 times to see which node is chosen
+                graph_temp, options_temp = add_vertex(graph, options, m=1)
+                graph_use = graph_temp.copy()
+                probabilities_produced[list(graph_use[len(graph_use)-1])[0]] += 1  # increment for node chosen
+                del graph[len(graph_temp)-1]  # erase changes made to repeat
+                del options[len(options)-1]  # erase changes made to repeat
+                del options[len(options)-1]  # erase changes made to repeat
+                sys.stdout.write(next(load))
+                sys.stdout.flush()
+                sys.stdout.write('\b')
+            big_list.append(probabilities_produced)
         print(' \r')
+        
+        my_list = pd.DataFrame(big_list)
+        avg = dict(my_list.mean())
+        err = dict(my_list.std())
 
-        probabilities_produced = np.array(list(probabilities_produced.values()))/1000000
-
-        assert np.array_equal(np.round(comparison, 1), np.round(probabilities_produced, 1))
+        # Divide by size of repetitions to make frequencies into probabilities
+        avg_p = np.array(list(avg.values()))/100000
+        err_p = np.array(list(err.values()))/100000
+        probabilities_produced = np.array(list(probabilities_produced.values()))/100000
         
         if np.array_equal(np.round(comparison, 1), np.round(probabilities_produced, 1)):
             print('\n**************************\nPA Probability Test PASSED\n**************************\n\n')
@@ -182,7 +193,7 @@ def test_probabilities(compute=False, plot=True):
         matplotlib.rcParams['mathtext.fontset'] = 'stix'
         chi, p_value = st.chisquare(probabilities_produced, comparison)
         plt.bar(list(probabilities.keys()), comparison, fill=False, label=r'$Expected$')
-        plt.bar(list(probabilities.keys()), probabilities_produced, alpha=0.5, color='cyan', label=r'$Obtained, \:$' + '\n' + r'$\chi^2={}, \: p-value={}$'.format(
+        plt.bar(list(probabilities.keys()), avg_p, yerr=err_p, alpha=0.5, color='cyan', label=r'$Obtained, \:$' + '\n' + r'$\chi^2={}, \: p-value={}$'.format(
             str(round(chi, 6)), str(round(p_value, 4))))
         plt.legend()
         plt.xlabel(r'$\it{Vertex}$', fontname='Times New Roman', fontsize=17)
@@ -205,6 +216,7 @@ def test_probabilities(compute=False, plot=True):
 
 
 def loading():
+    # Loading symbol when running a function on terminal
     while True:
         for c in '|/-\\':
             yield c

@@ -1,8 +1,16 @@
-from logbin2020 import logbin
 import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
 
-a = [0, 0, 0, 0, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 4, 4, 5, 5, 5, 6, 7, 7, 7, 7, 8, 8, 8, 9, 9, 9, 9, 9, 10, 10, 10, 10, 11, 11, 11, 11, 12, 12, 12, 12, 12, 13, 13, 13, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15]
+def deg_dist_theoretical_ra(k, m=2):
+    return ((m/(m+1))**(k-m))*(1/(1+m))
 
-x, y = logbin(a, scale=1.2)
-# print(x)
-# print(y)
+n = np.linspace(80, 500, 1000)
+
+y = deg_dist_theoretical_ra(n, m=64)
+
+fig, ax = plt.subplots()
+plt.plot(n, y, '--')
+ax.set_xscale('log')
+ax.set_yscale('log')
+plt.show()
