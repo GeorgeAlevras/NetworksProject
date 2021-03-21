@@ -2,7 +2,7 @@ import numpy as np
 import random as rnd
 
 """
-Georgios Alevras - 28/03/2021
+Georgios Alevras - 20/03/2021
 -----------------------------
 Python Version used: 3.8.2
 Numpy Version used: 1.19.1
@@ -28,15 +28,15 @@ Additional Dependencies: random
 
 
 def initialise_graph(size=4, m=2):
-    # a dictionary representing the adjacency list
+    # Dictionary representing the adjacency list
     graph = {x: set() for x in range(size)}  # keys: vertices, values: respective neighbours
     
     for i in range(len(graph)):
-        new_nodes = rnd.sample([x for x in range(len(graph)) if x!= i], m)  # connects each vertex to m randomly chosen vertices
+        new_nodes = rnd.sample([x for x in range(len(graph)) if x!= i], m)  # connects each vertex to all other vertices
         for j in new_nodes:
             add_edges(graph, i, j)  # connects each vertex with its new vertices
 
-    options = []  # List holds presence of all stubs to use for choice for preferential attachment
+    options = []  # List holds all stubs to use for choosing a vetex when using preferential attachment
     for i in range(len(graph)):
         for j in range(len(list(graph[i]))):
             options.append(i)
@@ -51,23 +51,23 @@ def add_edges(graph, source, destination):
 
 
 def update_degrees(graph):
-    # updates degrees for each vertex
+    # Updates / gets degrees for each vertex
     return dict(zip(graph.keys(), [len(graph[k]) for k in sorted(graph.keys())]))
 
 
 def update_e(degrees):
-    # updates e - total number of vertices in graph (sum of degrees of all vertices over 2)
+    # Updates / gets e - total No. of vertices in graph (sum of degrees of all vertices over 2)
     return int(sum(list(degrees.values()))/2)
 
 
 def add_vertex(graph, options, m=2, method='pa', q=2/3):
-    new_nodes = set()  # use of set to have unique elements (nodes)
-    while len(new_nodes) < m:  # Keep adding unique nodes till m are chosen
+    new_nodes = set()  # use of a set (datastructure) to have unique elements (vertice)
+    while len(new_nodes) < m:  # Keep adding unique vertices until m are chosen
         if method == 'pa':
-            # Choose randomly an index from a list weighted by presence of stubs (degrees) for each node
+            # Choose an index randomly from a list weighted by presence of stubs (degrees) for each vertex
             new_nodes.add(options[rnd.randint(0, len(options)-1)])
         elif method == 'ra':
-            # Choose randomly any node in graph
+            # Choose randomly any vertex in graph
             new_nodes.add(rnd.randint(0, len(graph)-1))
         elif method == 'mi':
             # Create a probability space 0: PA, 1: RA to choose from 
@@ -75,6 +75,9 @@ def add_vertex(graph, options, m=2, method='pa', q=2/3):
                 probs = [0, 0, 1]
             elif q == 1/2:
                 probs = [0, 1]
+            else:
+                raise ValueError("Invalid value of q. Model designed only for q=2/3 and q=1/2.")
+            
             choice = probs[rnd.randint(0, len(probs)-1)]
             if choice == 0:  # If 0 use same logic for PA
                 new_nodes.add(options[rnd.randint(0, len(options)-1)])
@@ -83,12 +86,12 @@ def add_vertex(graph, options, m=2, method='pa', q=2/3):
         else:
             raise ValueError("Not valid method. Please provide one of: pa, ra, mi")
     
-    j = len(graph)  # index of new vertex - is always the length of the graph
+    j = len(graph)  # index of new vertex - always the length of the graph
     graph[len(graph)] = set()  # initialise adjacency values of new vertex as empty
 
-    new_nodes = list(new_nodes)  # List of all new chosen nodes to attach
+    new_nodes = list(new_nodes)  # List of all new chosen vertices to attach
     for i in new_nodes:
-        add_edges(graph, j, i)  # Connect all new nodes
+        add_edges(graph, j, i)  # Connect all new vertices
         options.append(j)
         options.append(i)
 
@@ -109,32 +112,32 @@ def save_graph(graph, PATH_NAME):
 
 
 def deg_dist_theoretical_pa(k, m=2):
-    # theoretical degree distribution for preferential attachment
+    # Theoretical degree distribution for preferential attachment
     return (2*m*(m+1))/(k*(k+1)*(k+2))
 
 
 def deg_dist_theoretical_ra(k, m=2):
-    # theoretical degree distribution for random attachment
+    # Theoretical degree distribution for random attachment
     return ((m/(m+1))**(k-m))*(1/(1+m))
 
 
 def deg_dist_theoretical_mi_2_3(k, m=2):
-    # theoretical degree distribution for mixed preferential attachment, q=2/3
+    # Theoretical degree distribution for mixed preferential attachment, q=2/3
     return (12*m*(2*m+1)*(2*m+2)*(2*m+3)) / ((k+m)*(k+m+1)*(k+m+2)*(k+m+3)*(6+4*m))
 
 
 def deg_dist_theoretical_mi_1_2(k, m=2):
-    # theoretical degree distribution for mixed preferential attachment, q=1/2
+    # Theoretical degree distribution for mixed preferential attachment, q=1/2
     return (12*m*(3*m+1)*(3*m+2)*(3*m+3)) / ((k+2*m)*(k+2*m+1)*(k+2*m+2)*(k+2*m+3)*(k+2*m+4))
 
 
 def k_max_pa(N, m):
-    # theoretical expected largest degree for preferential attachment
+    # Theoretical expected largest degree for preferential attachment
     return (-1 + np.sqrt(1 + 4*N*m*(m+1))*0.5)
 
 
 def k_max_ra(N, m):
-    # theoretical expected largest degree for random attachment
+    # Theoretical expected largest degree for random attachment
     return m - (np.log(N))/(np.log(m) - np.log(m + 1))
 
 

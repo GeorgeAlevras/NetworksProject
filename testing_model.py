@@ -13,7 +13,7 @@ import scipy.stats as st
 import pandas as pd
 
 """
-Georgios Alevras - 28/03/2021
+Georgios Alevras - 20/03/2021
 -----------------------------
 Python Version used: 3.8.2
 Numpy Version used: 1.19.1
@@ -43,7 +43,7 @@ def test_adjacency_list():
     print('\nTesting the adjacency list')
 
     m = 3
-    graph, options = initialise_graph(size=m+1, m=m)  # Create complete graph of size = 4 (m=3)
+    graph, options = initialise_graph(size=m+1, m=m)
     for i in range(int(1e3)):
         graph, options = add_vertex(graph, options, m=m)
         sys.stdout.write(next(load))
@@ -106,8 +106,8 @@ def plot_graph():
     for i in range(int(1e1)):
         graph, options = add_vertex(graph, options, m=m)
 
-        save_graph(graph, 'testing_graph.txt')
-        g = nx.read_adjlist('testing_graph.txt')
+        save_graph(graph, 'Files/Testing/testing_graph.txt')
+        g = nx.read_adjlist('Files/Testing/testing_graph.txt')
         plt.figure(1)
         nx.draw_shell(g, with_labels=True, font_weight='bold')
         plt.savefig('Plots/Testing/testing_graph_' + str(i) + '.png')
@@ -133,8 +133,8 @@ def test_probabilities(compute=False, plot=True):
         e = update_e(degrees)
         probabilities = dict(zip(graph.keys(), [len(graph[k])/(2*e) for k in sorted(graph.keys())]))
         
-        save_graph(graph, 'testing_probabilities_graph.txt')
-        file = open('testing_probabilities.txt', 'wb')
+        save_graph(graph, 'Files/Testing/testing_probabilities_graph.txt')
+        file = open('Files/Testing/testing_probabilities.txt', 'wb')
         pickle.dump(graph, file)
         pickle.dump(options, file)
         pickle.dump(probabilities, file)
@@ -144,7 +144,7 @@ def test_probabilities(compute=False, plot=True):
         print('\nTesting the PA probabilities')
         load = loading()
 
-        file = open('testing_probabilities.txt', 'rb')
+        file = open('Files/Testing/testing_probabilities.txt', 'rb')
         graph = pickle.load(file)
         options = pickle.load(file)
         probabilities = pickle.load(file)
@@ -193,7 +193,7 @@ def test_probabilities(compute=False, plot=True):
         matplotlib.rcParams['mathtext.fontset'] = 'stix'
         chi, p_value = st.chisquare(probabilities_produced, comparison)
         plt.bar(list(probabilities.keys()), comparison, fill=False, label=r'$Expected$')
-        plt.bar(list(probabilities.keys()), avg_p, yerr=err_p, alpha=0.5, color='cyan', label=r'$Obtained, \:$' + '\n' + r'$\chi^2={}, \: p-value={}$'.format(
+        plt.bar(list(probabilities.keys()), avg_p, yerr=err_p, alpha=0.5, capsize=2, color='cyan', label=r'$Obtained: \:$' + '\n' + r'$\chi^2={}, \: p \: value={}$'.format(
             str(round(chi, 6)), str(round(p_value, 4))))
         plt.legend()
         plt.xlabel(r'$\it{Vertex}$', fontname='Times New Roman', fontsize=17)
@@ -208,7 +208,7 @@ def test_probabilities(compute=False, plot=True):
         plt.ylim(0, 0.175)
         plt.savefig('Plots/Testing/comparison_probabilities.png')
 
-        g = nx.read_adjlist('testing_probabilities_graph.txt')
+        g = nx.read_adjlist('Files/Testing/testing_probabilities_graph.txt')
         plt.figure(2)
         nx.draw_shell(g, with_labels=True, font_weight='bold')
         plt.savefig('Plots/Testing/testing_probabilities.png')

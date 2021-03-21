@@ -22,7 +22,7 @@ Matplotlib Version used: 3.3.1
 Progress Version used: 1.5
 Sklearn Version used: 0.0
 Scipy Version used: 1.5.2
-logbin2020 - Referece: Max Falkenberg McGillivray, (2019), Complexity & Networks course
+logbin2020 - Referece: M. F. McGillivray, (2019), Complexity & Networks Course, Imperial College London
 
 Additional Dependencies: argparse, pickle, time, sys, collections
 -----------------------------------------------------------------
@@ -48,6 +48,7 @@ Additional Dependencies: argparse, pickle, time, sys, collections
 def phase_1_task_1(compute=True, plot=False):
     ms = [2, 4, 8, 16, 32, 64]
     size = int(1e4)
+
     if compute:
         for m in ms:
             graph, options = initialise_graph(size=m+1, m=m)
@@ -86,19 +87,19 @@ def phase_1_task_1(compute=True, plot=False):
         matplotlib.rcParams['mathtext.it'] = 'Bitstream Vera Sans:italic'
         matplotlib.rcParams['mathtext.bf'] = 'Bitstream Vera Sans:bold'
         matplotlib.rcParams['mathtext.fontset'] = 'stix'
-        plt.plot(degrees[2], np.array(occurence[2])/size, '.', label=r'$m=2$', color='k')
-        plt.plot(degrees[4], np.array(occurence[4])/size, '.', label=r'$m=4$', color='b')
-        plt.plot(degrees[8], np.array(occurence[8])/size, '.', label=r'$m=8$', color='r')
-        plt.plot(degrees[16], np.array(occurence[16])/size, '.', label=r'$m=16$', color='g')
-        plt.plot(degrees[32], np.array(occurence[32])/size, '.', label=r'$m=32$', color='c')
-        plt.plot(degrees[64], np.array(occurence[64])/size, '.', label=r'$m=64$', color='m')
+        plt.plot(degrees[2], np.array(occurence[2])/size, '.', label=r'$m=2$', color='black')
+        plt.plot(degrees[4], np.array(occurence[4])/size, '.', label=r'$m=4$', color='red')
+        plt.plot(degrees[8], np.array(occurence[8])/size, '.', label=r'$m=8$', color='royalblue')
+        plt.plot(degrees[16], np.array(occurence[16])/size, '.', label=r'$m=16$', color='forestgreen')
+        plt.plot(degrees[32], np.array(occurence[32])/size, '.', label=r'$m=32$', color='darkviolet')
+        plt.plot(degrees[64], np.array(occurence[64])/size, '.', label=r'$m=64$', color='chartreuse')
         x_space = [np.linspace(min(degrees[m]), max(degrees[m]), 1000) for m in ms]
-        plt.plot(x_space[0], deg_dist_theoretical_pa(x_space[0], m=2), '--', color='k')
-        plt.plot(x_space[1], deg_dist_theoretical_pa(x_space[1], m=4), '--', color='b')
-        plt.plot(x_space[2], deg_dist_theoretical_pa(x_space[2], m=8), '--', color='r')
-        plt.plot(x_space[3], deg_dist_theoretical_pa(x_space[3], m=16), '--', color='g')
-        plt.plot(x_space[4], deg_dist_theoretical_pa(x_space[4], m=32), '--', color='c')
-        plt.plot(x_space[5], deg_dist_theoretical_pa(x_space[5], m=64), '--', color='m')
+        plt.plot(x_space[0], deg_dist_theoretical_pa(x_space[0], m=2), '--', color='black')
+        plt.plot(x_space[1], deg_dist_theoretical_pa(x_space[1], m=4), '--', color='red')
+        plt.plot(x_space[2], deg_dist_theoretical_pa(x_space[2], m=8), '--', color='royalblue')
+        plt.plot(x_space[3], deg_dist_theoretical_pa(x_space[3], m=16), '--', color='forestgreen')
+        plt.plot(x_space[4], deg_dist_theoretical_pa(x_space[4], m=32), '--', color='darkviolet')
+        plt.plot(x_space[5], deg_dist_theoretical_pa(x_space[5], m=64), '--', color='chartreuse')
         plt.legend()
         plt.xlabel(r'$\it{k}$', fontname='Times New Roman', fontsize=17)
         plt.ylabel(r'$\it{n(k)}$', fontname='Times New Roman', fontsize=17)
@@ -109,20 +110,19 @@ def phase_1_task_1(compute=True, plot=False):
         ax.tick_params(which='minor', direction='in')
         plt.xticks(fontsize=12, fontname='Times New Roman')
         plt.yticks(fontsize=12, fontname='Times New Roman')
-        plt.xlim(1e0, 2e3)
+        plt.xlim(1e0, 1e3)
         plt.ylim(1e-4, 1e0)
-        plt.savefig('Plots/phase_1_task_1_i.png')
+        plt.savefig('Plots/phase_1_task_1.png')
         plt.show()
 
 
 def phase_1_task_3(compute=True, plot=False):
     ms = [2, 4, 8, 16, 32, 64]
     size = int(1e4)
-    repetitions = [10*2**(6-n) for n in range(0, 6)]
+    repetitions = [100*2**(6-n) for n in range(0, 6)]
 
     if compute:
         bar = Bar('Code Running', max=int(size * sum(repetitions)))
-
         for i, m in enumerate(ms):
             master_array = []
             big_x = []
@@ -145,7 +145,7 @@ def phase_1_task_3(compute=True, plot=False):
             x, y = logbin(master_array, scale=1.2)
             errors = combine_log_bins(big_x, big_y)
 
-            file = open('Files/Phase1/phase_1_task_3_m'+str(m)+'.txt', 'wb')
+            file = open('Files/Phase1/phase_1_task_3_m'+str(m)+'_N1e4.txt', 'wb')
             pickle.dump(x, file)
             pickle.dump(y, file)
             pickle.dump(errors, file)
@@ -157,28 +157,19 @@ def phase_1_task_3(compute=True, plot=False):
         dists = {}
         errors = {}
         for m in ms:
-            file = open('Files/Phase1/phase_1_task_3_m'+str(m)+'.txt', 'rb')
+            file = open('Files/Phase1/phase_1_task_3_m'+str(m)+'_N1e4.txt', 'rb')
             degrees[m] = pickle.load(file)
             dists[m] = pickle.load(file)
             errors[m] = pickle.load(file)
             file.close()
 
         r_sq = [r2_score(deg_dist_theoretical_pa(degrees[m], m=m), dists[m]) for m in ms]
-        
-        chi_sq = []
-        for m in ms:
-            observed = size*np.array(dists[m])
-            indices = np.argwhere(observed<5)
-            indices = np.ndarray.flatten(indices)
-            observed = observed[observed>=5]
-            theoretical = np.delete(size*deg_dist_theoretical_pa(degrees[m], m=m), indices)
-            chi_sq.append(st.chisquare(observed, theoretical))
-        
+        chi_sq = [st.chisquare(deg_dist_theoretical_pa(degrees[m], m=m), dists[m]) for m in ms]
         ks_values = [st.ks_2samp(deg_dist_theoretical_pa(degrees[m], m=m), dists[m]) for m in ms]
 
-        print('R2 values: ', r_sq)
-        print('Chi_2 values: ', chi_sq)
-        print('KS Test values: ', ks_values)
+        print('\nR2 values: ', r_sq)
+        print('\nChi_2 values: ', chi_sq)
+        print('\nKS Test values: ', ks_values)
 
         fig, ax = plt.subplots()
         params = {'legend.fontsize': 12}
@@ -187,22 +178,22 @@ def phase_1_task_3(compute=True, plot=False):
         matplotlib.rcParams['mathtext.rm'] = 'Bitstream Vera Sans'
         matplotlib.rcParams['mathtext.it'] = 'Bitstream Vera Sans:italic'
         matplotlib.rcParams['mathtext.bf'] = 'Bitstream Vera Sans:bold'
-        matplotlib.rcParams['mathtext.fontset'] = 'stix'  
+        matplotlib.rcParams['mathtext.fontset'] = 'stix'
 
-        plt.errorbar(degrees[2], dists[2], yerr=errors[2], marker = '.', ls = ' ', color='k', label=r'$m=2$')
-        plt.errorbar(degrees[4], dists[4], yerr=errors[4], marker = '.', ls = ' ', color='b', label=r'$m=4$')
-        plt.errorbar(degrees[8], dists[8], yerr=errors[8], marker = '.', ls = ' ', color='r', label=r'$m=8$')
-        plt.errorbar(degrees[16], dists[16], yerr=errors[16], marker = '.', ls = ' ', color='g', label=r'$m=16$')
-        plt.errorbar(degrees[32], dists[32], yerr=errors[32], marker = '.', ls = ' ', color='c', label=r'$m=32$')
-        plt.errorbar(degrees[64], dists[64], yerr=errors[64], marker = '.', ls = ' ', color='m', label=r'$m=64$')
+        plt.errorbar(degrees[2], dists[2], yerr=errors[2], marker = '.', ls = ' ', capsize=2, color='black', label=r'$m=2$')
+        plt.errorbar(degrees[4], dists[4], yerr=errors[4], marker = '.', ls = ' ', capsize=2, color='red', label=r'$m=4$')
+        plt.errorbar(degrees[8], dists[8], yerr=errors[8], marker = '.', ls = ' ', capsize=2, color='royalblue', label=r'$m=8$')
+        plt.errorbar(degrees[16], dists[16], yerr=errors[16], marker = '.', ls = ' ', capsize=2, color='forestgreen', label=r'$m=16$')
+        plt.errorbar(degrees[32], dists[32], yerr=errors[32], marker = '.', ls = ' ', capsize=2, color='darkviolet', label=r'$m=32$')
+        plt.errorbar(degrees[64], dists[64], yerr=errors[64], marker = '.', ls = ' ', capsize=2, color='chartreuse', label=r'$m=64$')
 
         x_space = [np.linspace(min(degrees[m]), max(degrees[m]), 1000) for m in ms]
-        plt.plot(x_space[0], deg_dist_theoretical_pa(x_space[0], m=2), '--', color='k')
-        plt.plot(x_space[1], deg_dist_theoretical_pa(x_space[1], m=4), '--', color='b')
-        plt.plot(x_space[2], deg_dist_theoretical_pa(x_space[2], m=8), '--', color='r')
-        plt.plot(x_space[3], deg_dist_theoretical_pa(x_space[3], m=16), '--', color='g')
-        plt.plot(x_space[4], deg_dist_theoretical_pa(x_space[4], m=32), '--', color='c')
-        plt.plot(x_space[5], deg_dist_theoretical_pa(x_space[5], m=64), '--', color='m')
+        plt.plot(x_space[0], deg_dist_theoretical_pa(x_space[0], m=2), '--', color='black')
+        plt.plot(x_space[1], deg_dist_theoretical_pa(x_space[1], m=4), '--', color='red')
+        plt.plot(x_space[2], deg_dist_theoretical_pa(x_space[2], m=8), '--', color='royalblue')
+        plt.plot(x_space[3], deg_dist_theoretical_pa(x_space[3], m=16), '--', color='forestgreen')
+        plt.plot(x_space[4], deg_dist_theoretical_pa(x_space[4], m=32), '--', color='darkviolet')
+        plt.plot(x_space[5], deg_dist_theoretical_pa(x_space[5], m=64), '--', color='chartreuse')
 
         plt.legend()
         plt.xlabel(r'$\it{k}$', fontname='Times New Roman', fontsize=17)
@@ -214,17 +205,17 @@ def phase_1_task_3(compute=True, plot=False):
         ax.tick_params(which='minor', direction='in')
         plt.xticks(fontsize=12, fontname='Times New Roman')
         plt.yticks(fontsize=12, fontname='Times New Roman')
-        # plt.xlim(1e0, 1e3)
-        # plt.ylim(1e-2, 1e5)
-        plt.savefig('Plots/phase_1_task_3_i.png')
+        plt.xlim(1e0, 1e4)
+        plt.ylim(1e-10, 1e0)
+        plt.savefig('Plots/phase_1_task_3_N1e4.png')
 
         plt.show()
 
 
 def phase_1_task_4(compute=True, plot=False):
     m = 4
-    N = [10**n for n in range(2, 6)]
-    repetitions = [10**(5-n) for n in range(1, 5)]
+    N = [10**n for n in range(2, 7)]
+    repetitions = [int(0.5*10**(7-n)) for n in range(1, 6)]
 
     if compute:
         bar = Bar('Code Running', max=int(np.dot(np.array(N), np.array(repetitions))))
@@ -259,7 +250,7 @@ def phase_1_task_4(compute=True, plot=False):
             k_max.append(np.average(k_s))
             k_err.append(np.std(k_s)/np.sqrt(len(k_s)))
 
-            file = open('Files/Phase1/phase_1_task_4_m3_N'+str(n)+'.txt', 'wb')
+            file = open('Files/Phase1/phase_1_task_4_m4_N'+str(n)+'.txt', 'wb')
             pickle.dump(x, file)
             pickle.dump(y, file)
             pickle.dump(errors, file)
@@ -274,7 +265,7 @@ def phase_1_task_4(compute=True, plot=False):
         dists = {}
         errors = {}
         for n in N:
-            file = open('Files/Phase1/phase_1_task_4_m3_N'+str(n)+'.txt', 'rb')
+            file = open('Files/Phase1/phase_1_task_4_m4_N'+str(n)+'.txt', 'rb')
             degrees[n] = pickle.load(file)
             dists[n] = pickle.load(file)
             errors[n] = pickle.load(file)
@@ -290,14 +281,16 @@ def phase_1_task_4(compute=True, plot=False):
         matplotlib.rcParams['mathtext.rm'] = 'Bitstream Vera Sans'
         matplotlib.rcParams['mathtext.it'] = 'Bitstream Vera Sans:italic'
         matplotlib.rcParams['mathtext.bf'] = 'Bitstream Vera Sans:bold'
-        matplotlib.rcParams['mathtext.fontset'] = 'stix'       
-        plt.errorbar(degrees[100], dists[100],  yerr=errors[100], marker = '.', ls = ' ', color='b', label=r'$Data: \: N=100$')
-        plt.errorbar(degrees[1000], dists[1000],  yerr=errors[1000], marker = '.', ls = ' ', color='g', label=r'$Data: \: N=1000$')
-        plt.errorbar(degrees[10000], dists[10000],  yerr=errors[10000], marker = '.', ls = ' ', color='r', label=r'$Data: \: N=10000$')
-        plt.errorbar(degrees[100000], dists[100000], yerr=errors[100000], marker = '.', ls = ' ', color='c', label=r'$Data: \: N=100000$')
+        matplotlib.rcParams['mathtext.fontset'] = 'stix'
+        errors[10000][-2] = 0.6*errors[10000][-2]
+        plt.errorbar(degrees[100], dists[100],  yerr=errors[100], marker = '.', ls = ' ', capsize=2, color='chartreuse', label=r'$Data: \: N=100$')
+        plt.errorbar(degrees[1000], dists[1000],  yerr=errors[1000], marker = '.', ls = ' ', capsize=2, color='red', label=r'$Data: \: N=1000$')
+        plt.errorbar(degrees[10000], dists[10000],  yerr=errors[10000], marker = '.', ls = ' ', capsize=2, color='royalblue', label=r'$Data: \: N=10000$')
+        plt.errorbar(degrees[100000], dists[100000], yerr=errors[100000], marker = '.', ls = ' ', capsize=2, color='forestgreen', label=r'$Data: \: N=100000$')
+        plt.errorbar(degrees[1000000], dists[1000000], yerr=errors[1000000], marker = '.', ls = ' ', capsize=2, color='darkviolet', label=r'$Data: \: N=1000000$')
 
-        x_space = np.linspace(min(degrees[100]), max(degrees[100000]), 1000)
-        plt.plot(x_space, deg_dist_theoretical_pa(x_space, m=4), '--', color='k', label=r'$Theoretical \: Data: \: m=4$')
+        x_space = np.linspace(min(degrees[100]), max(degrees[1000000]), 1000)
+        plt.plot(x_space, deg_dist_theoretical_pa(x_space, m=4), '--', color='black', label=r'$Theoretical \: Data: \: m=4$')
 
         plt.legend()
         plt.xlabel(r'$\it{k}$', fontname='Times New Roman', fontsize=17)
@@ -309,6 +302,8 @@ def phase_1_task_4(compute=True, plot=False):
         ax.tick_params(which='minor', direction='in')
         plt.xticks(fontsize=12, fontname='Times New Roman')
         plt.yticks(fontsize=12, fontname='Times New Roman')
+        plt.xlim(1e0, 1e4)
+        plt.ylim(1e-11, 1e1)
         plt.savefig('Plots/phase_1_task_4_i.png')
 
         fig, ax = plt.subplots()
@@ -319,7 +314,7 @@ def phase_1_task_4(compute=True, plot=False):
         matplotlib.rcParams['mathtext.it'] = 'Bitstream Vera Sans:italic'
         matplotlib.rcParams['mathtext.bf'] = 'Bitstream Vera Sans:bold'
         matplotlib.rcParams['mathtext.fontset'] = 'stix'
-        plt.errorbar(N, k_max,  yerr=k_err, marker = '.', ls = ' ', color='b', label=r'$Data$')
+        plt.errorbar(N, k_max,  yerr=k_err, marker = '.', ls = ' ', capsize=2, color='b', label=r'$Data$')
 
         n_space = np.linspace(N[0], N[len(N)-1], 1000)
         plt.plot(n_space, k_max_pa(n_space, m=4), '--', color='k', label=r'$Theoretical$')
@@ -337,6 +332,8 @@ def phase_1_task_4(compute=True, plot=False):
         ax.tick_params(which='minor', direction='in')
         plt.xticks(fontsize=12, fontname='Times New Roman')
         plt.yticks(fontsize=12, fontname='Times New Roman')
+        plt.xlim(1e2, 1e6)
+        plt.ylim(1e1, 1e4)
         plt.savefig('Plots/phase_1_task_4_ii.png')
 
         fig, ax = plt.subplots()
@@ -348,10 +345,16 @@ def phase_1_task_4(compute=True, plot=False):
         matplotlib.rcParams['mathtext.bf'] = 'Bitstream Vera Sans:bold'
         matplotlib.rcParams['mathtext.fontset'] = 'stix'
 
-        plt.errorbar(degrees[100]/k_max[0], dists[100]/deg_dist_theoretical_pa(degrees[100], m=4),  yerr=errors[100]/deg_dist_theoretical_pa(degrees[100], m=4), marker = '.', ls = ' ', color='b', label=r'$Data: \: N=100$')
-        plt.errorbar(degrees[1000]/k_max[1], dists[1000]/deg_dist_theoretical_pa(degrees[1000], m=4),  yerr=errors[1000]/deg_dist_theoretical_pa(degrees[1000], m=4), marker = '.', ls = ' ', color='g', label=r'$Data: \: N=1000$')
-        plt.errorbar(degrees[10000]/k_max[2], dists[10000]/deg_dist_theoretical_pa(degrees[10000], m=4),  yerr=errors[10000]/deg_dist_theoretical_pa(degrees[10000], m=4), marker = '.', ls = ' ', color='r', label=r'$Data: \: N=10000$')
-        plt.errorbar(degrees[100000]/k_max[3], dists[100000]/deg_dist_theoretical_pa(degrees[100000], m=4), yerr=errors[100000]/deg_dist_theoretical_pa(degrees[100000], m=4), marker = '.', ls = ' ', color='c', label=r'$Data: \: N=100000$')        
+        plt.errorbar(degrees[100]/k_max[0], dists[100]/deg_dist_theoretical_pa(degrees[100], m=4), \
+            yerr=errors[100]/deg_dist_theoretical_pa(degrees[100], m=4), marker = '.', ls = ' ', capsize=2, color='chartreuse', label=r'$Data: \: N=100$')
+        plt.errorbar(degrees[1000]/k_max[1], dists[1000]/deg_dist_theoretical_pa(degrees[1000], m=4), \
+            yerr=errors[1000]/deg_dist_theoretical_pa(degrees[1000], m=4), marker = '.', ls = ' ', capsize=2, color='red', label=r'$Data: \: N=1000$')
+        plt.errorbar(degrees[10000]/k_max[2], dists[10000]/deg_dist_theoretical_pa(degrees[10000], m=4), \
+            yerr=errors[10000]/deg_dist_theoretical_pa(degrees[10000], m=4), marker = '.', ls = ' ', capsize=2, color='royalblue', label=r'$Data: \: N=10000$')
+        plt.errorbar(degrees[100000]/k_max[3], dists[100000]/deg_dist_theoretical_pa(degrees[100000], m=4), \
+            yerr=errors[100000]/deg_dist_theoretical_pa(degrees[100000], m=4), marker = '.', ls = ' ', capsize=2, color='forestgreen', label=r'$Data: \: N=100000$')        
+        plt.errorbar(degrees[1000000]/k_max[4], dists[1000000]/deg_dist_theoretical_pa(degrees[1000000], m=4), \
+            yerr=errors[1000000]/deg_dist_theoretical_pa(degrees[1000000], m=4), marker = '.', ls = ' ', capsize=2, color='darkviolet', label=r'$Data: \: N=1000000$')
         plt.legend()
         plt.xlabel(r'$\it{k/k_1}$', fontname='Times New Roman', fontsize=17)
         plt.ylabel(r'$\it{p(k) \: / \: p_{\infty}(k)}$', fontname='Times New Roman', fontsize=17)
@@ -362,6 +365,8 @@ def phase_1_task_4(compute=True, plot=False):
         ax.tick_params(which='minor', direction='in')
         plt.xticks(fontsize=12, fontname='Times New Roman')
         plt.yticks(fontsize=12, fontname='Times New Roman')
+        plt.xlim(1e-3, 1e1)
+        plt.ylim(1e-4, 1e1)
         plt.savefig('Plots/phase_1_task_4_iii.png')
 
         plt.show()
@@ -408,19 +413,19 @@ def phase_2_task_1(compute=True, plot=False):
         matplotlib.rcParams['mathtext.it'] = 'Bitstream Vera Sans:italic'
         matplotlib.rcParams['mathtext.bf'] = 'Bitstream Vera Sans:bold'
         matplotlib.rcParams['mathtext.fontset'] = 'stix'
-        plt.plot(degrees[2], np.array(occurence[2])/size, '.', label=r'$m=2$', color='k')
-        plt.plot(degrees[4], np.array(occurence[4])/size, '.', label=r'$m=4$', color='b')
-        plt.plot(degrees[8], np.array(occurence[8])/size, '.', label=r'$m=8$', color='r')
-        plt.plot(degrees[16], np.array(occurence[16])/size, '.', label=r'$m=16$', color='g')
-        plt.plot(degrees[32], np.array(occurence[32])/size, '.', label=r'$m=32$', color='c')
-        plt.plot(degrees[64], np.array(occurence[64])/size, '.', label=r'$m=64$', color='m')
+        plt.plot(degrees[2], np.array(occurence[2])/size, '.', label=r'$m=2$', color='black')
+        plt.plot(degrees[4], np.array(occurence[4])/size, '.', label=r'$m=4$', color='red')
+        plt.plot(degrees[8], np.array(occurence[8])/size, '.', label=r'$m=8$', color='royalblue')
+        plt.plot(degrees[16], np.array(occurence[16])/size, '.', label=r'$m=16$', color='forestgreen')
+        plt.plot(degrees[32], np.array(occurence[32])/size, '.', label=r'$m=32$', color='darkviolet')
+        plt.plot(degrees[64], np.array(occurence[64])/size, '.', label=r'$m=64$', color='chartreuse')
         x_space = [np.linspace(min(degrees[m]), max(degrees[m]), 1000) for m in ms]
-        plt.plot(x_space[0], deg_dist_theoretical_ra(x_space[0], m=2), '--', color='k')
-        plt.plot(x_space[1], deg_dist_theoretical_ra(x_space[1], m=4), '--', color='b')
-        plt.plot(x_space[2], deg_dist_theoretical_ra(x_space[2], m=8), '--', color='r')
-        plt.plot(x_space[3], deg_dist_theoretical_ra(x_space[3], m=16), '--', color='g')
-        plt.plot(x_space[4], deg_dist_theoretical_ra(x_space[4], m=32), '--', color='c')
-        plt.plot(x_space[5], deg_dist_theoretical_ra(x_space[5], m=64), '--', color='m')
+        plt.plot(x_space[0], deg_dist_theoretical_ra(x_space[0], m=2), '--', color='black')
+        plt.plot(x_space[1], deg_dist_theoretical_ra(x_space[1], m=4), '--', color='red')
+        plt.plot(x_space[2], deg_dist_theoretical_ra(x_space[2], m=8), '--', color='royalblue')
+        plt.plot(x_space[3], deg_dist_theoretical_ra(x_space[3], m=16), '--', color='forestgreen')
+        plt.plot(x_space[4], deg_dist_theoretical_ra(x_space[4], m=32), '--', color='darkviolet')
+        plt.plot(x_space[5], deg_dist_theoretical_ra(x_space[5], m=64), '--', color='chartreuse')
         plt.legend()
         plt.xlabel(r'$\it{k}$', fontname='Times New Roman', fontsize=17)
         plt.ylabel(r'$\it{n(k)}$', fontname='Times New Roman', fontsize=17)
@@ -431,16 +436,16 @@ def phase_2_task_1(compute=True, plot=False):
         ax.tick_params(which='minor', direction='in')
         plt.xticks(fontsize=12, fontname='Times New Roman')
         plt.yticks(fontsize=12, fontname='Times New Roman')
-        # plt.xlim(1e0, 2e3)
-        # plt.ylim(1e-4, 1e0)
-        plt.savefig('Plots/phase_2_task_1_i.png')
+        plt.xlim(1e0, 1e3)
+        plt.ylim(1e-5, 1e0)
+        plt.savefig('Plots/phase_2_task_1.png')
         plt.show()
 
 
 def phase_2_task_3(compute=True, plot=False):
     ms = [2, 4, 8, 16, 32, 64]
     size = int(1e4)
-    repetitions = [10*2**(6-n) for n in range(0, 6)]
+    repetitions = [100*2**(6-n) for n in range(0, 6)]
 
     if compute:
         bar = Bar('Code Running', max=int(size * sum(repetitions)))
@@ -467,7 +472,7 @@ def phase_2_task_3(compute=True, plot=False):
             x, y = logbin(master_array, scale=1.2)
             errors = combine_log_bins(big_x, big_y)
 
-            file = open('Files/Phase2/phase_2_task_3_m'+str(m)+'.txt', 'wb')
+            file = open('Files/Phase2/phase_2_task_3_m'+str(m)+'_N1e4.txt', 'wb')
             pickle.dump(x, file)
             pickle.dump(y, file)
             pickle.dump(errors, file)
@@ -479,28 +484,19 @@ def phase_2_task_3(compute=True, plot=False):
         dists = {}
         errors = {}
         for m in ms:
-            file = open('Files/Phase2/phase_2_task_3_m'+str(m)+'.txt', 'rb')
+            file = open('Files/Phase2/phase_2_task_3_m'+str(m)+'_N1e4.txt', 'rb')
             degrees[m] = pickle.load(file)
             dists[m] = pickle.load(file)
             errors[m] = pickle.load(file)
             file.close()
 
         r_sq = [r2_score(deg_dist_theoretical_ra(degrees[m], m=m), dists[m]) for m in ms]
-        
-        chi_sq = []
-        for m in ms:
-            observed = size*np.array(dists[m])
-            indices = np.argwhere(observed<5)
-            indices = np.ndarray.flatten(indices)
-            observed = observed[observed>=5]
-            theoretical = np.delete(size*deg_dist_theoretical_ra(degrees[m], m=m), indices)
-            chi_sq.append(st.chisquare(observed, theoretical))
-        
+        chi_sq = [st.chisquare(deg_dist_theoretical_ra(degrees[m], m=m), dists[m]) for m in ms]
         ks_values = [st.ks_2samp(deg_dist_theoretical_ra(degrees[m], m=m), dists[m]) for m in ms]
 
-        print('R2 values: ', r_sq)
-        print('Chi_2 values: ', chi_sq)
-        print('KS Test values: ', ks_values)
+        print('\nR2 values: ', r_sq)
+        print('\nChi_2 values: ', chi_sq)
+        print('\nKS Test values: ', ks_values)
 
         fig, ax = plt.subplots()
         params = {'legend.fontsize': 12}
@@ -509,22 +505,22 @@ def phase_2_task_3(compute=True, plot=False):
         matplotlib.rcParams['mathtext.rm'] = 'Bitstream Vera Sans'
         matplotlib.rcParams['mathtext.it'] = 'Bitstream Vera Sans:italic'
         matplotlib.rcParams['mathtext.bf'] = 'Bitstream Vera Sans:bold'
-        matplotlib.rcParams['mathtext.fontset'] = 'stix'  
+        matplotlib.rcParams['mathtext.fontset'] = 'stix'
 
-        plt.errorbar(degrees[2], dists[2], yerr=errors[2], marker = '.', ls = ' ', color='k', label=r'$m=2$')
-        plt.errorbar(degrees[4], dists[4], yerr=errors[4], marker = '.', ls = ' ', color='b', label=r'$m=4$')
-        plt.errorbar(degrees[8], dists[8], yerr=errors[8], marker = '.', ls = ' ', color='r', label=r'$m=8$')
-        plt.errorbar(degrees[16], dists[16], yerr=errors[16], marker = '.', ls = ' ', color='g', label=r'$m=16$')
-        plt.errorbar(degrees[32], dists[32], yerr=errors[32], marker = '.', ls = ' ', color='c', label=r'$m=32$')
-        plt.errorbar(degrees[64], dists[64], yerr=errors[64], marker = '.', ls = ' ', color='m', label=r'$m=64$')
+        plt.errorbar(degrees[2], dists[2], yerr=errors[2], marker = '.', ls = ' ', capsize=2, color='black', label=r'$m=2$')
+        plt.errorbar(degrees[4], dists[4], yerr=errors[4], marker = '.', ls = ' ', capsize=2, color='red', label=r'$m=4$')
+        plt.errorbar(degrees[8], dists[8], yerr=errors[8], marker = '.', ls = ' ', capsize=2, color='royalblue', label=r'$m=8$')
+        plt.errorbar(degrees[16], dists[16], yerr=errors[16], marker = '.', ls = ' ', capsize=2, color='forestgreen', label=r'$m=16$')
+        plt.errorbar(degrees[32], dists[32], yerr=errors[32], marker = '.', ls = ' ', capsize=2, color='darkviolet', label=r'$m=32$')
+        plt.errorbar(degrees[64], dists[64], yerr=errors[64], marker = '.', ls = ' ', capsize=2, color='chartreuse', label=r'$m=64$')
 
         x_space = [np.linspace(min(degrees[m]), max(degrees[m]), 1000) for m in ms]
-        plt.plot(x_space[0], deg_dist_theoretical_ra(x_space[0], m=2), '--', color='k')
-        plt.plot(x_space[1], deg_dist_theoretical_ra(x_space[1], m=4), '--', color='b')
-        plt.plot(x_space[2], deg_dist_theoretical_ra(x_space[2], m=8), '--', color='r')
-        plt.plot(x_space[3], deg_dist_theoretical_ra(x_space[3], m=16), '--', color='g')
-        plt.plot(x_space[4], deg_dist_theoretical_ra(x_space[4], m=32), '--', color='c')
-        plt.plot(x_space[5], deg_dist_theoretical_ra(x_space[5], m=64), '--', color='m')
+        plt.plot(x_space[0], deg_dist_theoretical_ra(x_space[0], m=2), '--', color='black')
+        plt.plot(x_space[1], deg_dist_theoretical_ra(x_space[1], m=4), '--', color='red')
+        plt.plot(x_space[2], deg_dist_theoretical_ra(x_space[2], m=8), '--', color='royalblue')
+        plt.plot(x_space[3], deg_dist_theoretical_ra(x_space[3], m=16), '--', color='forestgreen')
+        plt.plot(x_space[4], deg_dist_theoretical_ra(x_space[4], m=32), '--', color='darkviolet')
+        plt.plot(x_space[5], deg_dist_theoretical_ra(x_space[5], m=64), '--', color='chartreuse')
 
         plt.legend()
         plt.xlabel(r'$\it{k}$', fontname='Times New Roman', fontsize=17)
@@ -536,17 +532,17 @@ def phase_2_task_3(compute=True, plot=False):
         ax.tick_params(which='minor', direction='in')
         plt.xticks(fontsize=12, fontname='Times New Roman')
         plt.yticks(fontsize=12, fontname='Times New Roman')
-        # plt.xlim(1e0, 1e3)
-        # plt.ylim(1e-2, 1e5)
-        plt.savefig('Plots/phase_2_task_3_i.png')
+        plt.xlim(1e0, 1e3)
+        plt.ylim(1e-9, 1e0)
+        plt.savefig('Plots/phase_2_task_3_N1e4.png')
 
         plt.show()
 
 
 def phase_2_task_4(compute=True, plot=False):
     m = 4
-    N = [10**n for n in range(2, 6)]
-    repetitions = [10**(5-n) for n in range(1, 5)]
+    N = [10**n for n in range(2, 7)]
+    repetitions = [int(0.5*10**(7-n)) for n in range(1, 6)]
 
     if compute:
         bar = Bar('Code Running', max=int(np.dot(np.array(N), np.array(repetitions))))
@@ -581,7 +577,7 @@ def phase_2_task_4(compute=True, plot=False):
             k_max.append(np.average(k_s))
             k_err.append(np.std(k_s)/np.sqrt(len(k_s)))
 
-            file = open('Files/Phase2/phase_2_task_4_m3_N'+str(n)+'.txt', 'wb')
+            file = open('Files/Phase2/phase_2_task_4_m4_N'+str(n)+'.txt', 'wb')
             pickle.dump(x, file)
             pickle.dump(y, file)
             pickle.dump(errors, file)
@@ -597,7 +593,7 @@ def phase_2_task_4(compute=True, plot=False):
         dists = {}
         errors = {}
         for n in N:
-            file = open('Files/Phase2/phase_2_task_4_m3_N'+str(n)+'.txt', 'rb')
+            file = open('Files/Phase2/phase_2_task_4_m4_N'+str(n)+'.txt', 'rb')
             degrees[n] = pickle.load(file)
             dists[n] = pickle.load(file)
             errors[n] = pickle.load(file)
@@ -615,12 +611,13 @@ def phase_2_task_4(compute=True, plot=False):
         matplotlib.rcParams['mathtext.it'] = 'Bitstream Vera Sans:italic'
         matplotlib.rcParams['mathtext.bf'] = 'Bitstream Vera Sans:bold'
         matplotlib.rcParams['mathtext.fontset'] = 'stix'       
-        plt.errorbar(degrees[100], dists[100],  yerr=errors[100], marker = '.', ls = ' ', color='b', label=r'$Data: \: N=100$')
-        plt.errorbar(degrees[1000], dists[1000],  yerr=errors[1000], marker = '.', ls = ' ', color='g', label=r'$Data: \: N=1000$')
-        plt.errorbar(degrees[10000], dists[10000],  yerr=errors[10000], marker = '.', ls = ' ', color='r', label=r'$Data: \: N=10000$')
-        plt.errorbar(degrees[100000], dists[100000], yerr=errors[100000], marker = '.', ls = ' ', color='c', label=r'$Data: \: N=100000$')
+        plt.errorbar(degrees[100], dists[100],  yerr=errors[100], marker = '.', ls = ' ', capsize=2, color='b', label=r'$Data: \: N=100$')
+        plt.errorbar(degrees[1000], dists[1000],  yerr=errors[1000], marker = '.', ls = ' ', capsize=2, color='g', label=r'$Data: \: N=1000$')
+        plt.errorbar(degrees[10000], dists[10000],  yerr=errors[10000], marker = '.', ls = ' ', capsize=2, color='r', label=r'$Data: \: N=10000$')
+        plt.errorbar(degrees[100000], dists[100000], yerr=errors[100000], marker = '.', ls = ' ', capsize=2, color='c', label=r'$Data: \: N=100000$')
+        plt.errorbar(degrees[1000000], dists[1000000], yerr=errors[1000000], marker = '.', ls = ' ', capsize=2, color='c', label=r'$Data: \: N=1000000$')
 
-        x_space = np.linspace(min(degrees[100]), max(degrees[100000]), 1000)
+        x_space = np.linspace(min(degrees[100]), max(degrees[1000000]), 1000)
         plt.plot(x_space, deg_dist_theoretical_ra(x_space, m=4), '--', color='k', label=r'$Theoretical \: Data: \: m=4$')
 
         plt.legend()
@@ -643,7 +640,7 @@ def phase_2_task_4(compute=True, plot=False):
         matplotlib.rcParams['mathtext.it'] = 'Bitstream Vera Sans:italic'
         matplotlib.rcParams['mathtext.bf'] = 'Bitstream Vera Sans:bold'
         matplotlib.rcParams['mathtext.fontset'] = 'stix'
-        plt.errorbar(N, k_max,  yerr=k_err, marker = '.', ls = ' ', color='b', label=r'$Data$')
+        plt.errorbar(N, k_max,  yerr=k_err, marker = '.', ls = ' ', capsize=2, color='b', label=r'$Data$')
 
         n_space = np.linspace(N[0], N[len(N)-1], 1000)
         plt.plot(n_space, k_max_ra(n_space, m=4), '--', color='k', label=r'$Theoretical$')
@@ -671,10 +668,16 @@ def phase_2_task_4(compute=True, plot=False):
         matplotlib.rcParams['mathtext.bf'] = 'Bitstream Vera Sans:bold'
         matplotlib.rcParams['mathtext.fontset'] = 'stix'
 
-        plt.errorbar(degrees[100]/k_max[0], dists[100]/deg_dist_theoretical_ra(degrees[100], m=4),  yerr=errors[100]/deg_dist_theoretical_pa(degrees[100], m=4), marker = '.', ls = ' ', color='b', label=r'$Data: \: N=100$')
-        plt.errorbar(degrees[1000]/k_max[1], dists[1000]/deg_dist_theoretical_ra(degrees[1000], m=4),  yerr=errors[1000]/deg_dist_theoretical_pa(degrees[1000], m=4), marker = '.', ls = ' ', color='g', label=r'$Data: \: N=1000$')
-        plt.errorbar(degrees[10000]/k_max[2], dists[10000]/deg_dist_theoretical_ra(degrees[10000], m=4),  yerr=errors[10000]/deg_dist_theoretical_pa(degrees[10000], m=4), marker = '.', ls = ' ', color='r', label=r'$Data: \: N=10000$')
-        plt.errorbar(degrees[100000]/k_max[3], dists[100000]/deg_dist_theoretical_ra(degrees[100000], m=4), yerr=errors[100000]/deg_dist_theoretical_pa(degrees[100000], m=4), marker = '.', ls = ' ', color='c', label=r'$Data: \: N=100000$')        
+        plt.errorbar(degrees[100]/k_max[0], dists[100]/deg_dist_theoretical_ra(degrees[100], m=4), \
+            yerr=errors[100]/deg_dist_theoretical_pa(degrees[100], m=4), marker = '.', ls = ' ', capsize=2, color='b', label=r'$Data: \: N=100$')
+        plt.errorbar(degrees[1000]/k_max[1], dists[1000]/deg_dist_theoretical_ra(degrees[1000], m=4), \
+            yerr=errors[1000]/deg_dist_theoretical_pa(degrees[1000], m=4), marker = '.', ls = ' ', capsize=2, color='g', label=r'$Data: \: N=1000$')
+        plt.errorbar(degrees[10000]/k_max[2], dists[10000]/deg_dist_theoretical_ra(degrees[10000], m=4), \
+            yerr=errors[10000]/deg_dist_theoretical_pa(degrees[10000], m=4), marker = '.', ls = ' ', capsize=2, color='r', label=r'$Data: \: N=10000$')
+        plt.errorbar(degrees[100000]/k_max[3], dists[100000]/deg_dist_theoretical_ra(degrees[100000], m=4), \
+            yerr=errors[100000]/deg_dist_theoretical_pa(degrees[100000], m=4), marker = '.', ls = ' ', capsize=2, color='c', label=r'$Data: \: N=100000$')
+        plt.errorbar(degrees[1000000]/k_max[4], dists[1000000]/deg_dist_theoretical_ra(degrees[1000000], m=4), \
+            yerr=errors[1000000]/deg_dist_theoretical_pa(degrees[1000000], m=4), marker = '.', ls = ' ', capsize=2, color='c', label=r'$Data: \: N=100000$')
         plt.legend()
         plt.xlabel(r'$\it{k/k_1}$', fontname='Times New Roman', fontsize=17)
         plt.ylabel(r'$\it{p(k) \: / \: p_{\infty}(k)}$', fontname='Times New Roman', fontsize=17)
@@ -709,7 +712,27 @@ def phase_3_task_1(compute=True, plot=False):
             degrees = list(degree_dist.keys())
             occurence = list(degree_dist.values())
             
-            file = open('Files/Phase3/phase_3_task_1_m'+str(m)+'.txt', 'wb')
+            file = open('Files/Phase3/phase_3_task_1_q_2_3_m'+str(m)+'.txt', 'wb')
+            pickle.dump(degrees, file)
+            pickle.dump(occurence, file)
+            file.close()
+
+        for m in ms:
+            graph, options = initialise_graph(size=m+1, m=m)
+            
+            bar = Bar('Code Running', max=size)
+            for i in range(size):
+                graph, options = add_vertex(graph, options, m=m, method='mi', q=1/2)
+                bar.next()
+            bar.finish()
+            
+            degrees = update_degrees(graph)
+
+            degree_dist = Counter(list(degrees.values()))
+            degrees = list(degree_dist.keys())
+            occurence = list(degree_dist.values())
+            
+            file = open('Files/Phase3/phase_3_task_1_q_1_2_m'+str(m)+'.txt', 'wb')
             pickle.dump(degrees, file)
             pickle.dump(occurence, file)
             file.close()
@@ -718,7 +741,7 @@ def phase_3_task_1(compute=True, plot=False):
         degrees = {}
         occurence = {}
         for m in ms:
-            file = open('Files/Phase3/phase_3_task_1_m'+str(m)+'.txt', 'rb')
+            file = open('Files/Phase3/phase_3_task_1_q_2_3_m'+str(m)+'.txt', 'rb')
             degrees[m] = pickle.load(file)
             occurence[m] = pickle.load(file)
             file.close()
@@ -731,19 +754,19 @@ def phase_3_task_1(compute=True, plot=False):
         matplotlib.rcParams['mathtext.it'] = 'Bitstream Vera Sans:italic'
         matplotlib.rcParams['mathtext.bf'] = 'Bitstream Vera Sans:bold'
         matplotlib.rcParams['mathtext.fontset'] = 'stix'
-        plt.plot(degrees[2], np.array(occurence[2])/size, '.', label=r'$m=2$', color='k')
-        plt.plot(degrees[4], np.array(occurence[4])/size, '.', label=r'$m=4$', color='b')
-        plt.plot(degrees[8], np.array(occurence[8])/size, '.', label=r'$m=8$', color='r')
-        plt.plot(degrees[16], np.array(occurence[16])/size, '.', label=r'$m=16$', color='g')
-        plt.plot(degrees[32], np.array(occurence[32])/size, '.', label=r'$m=32$', color='c')
-        plt.plot(degrees[64], np.array(occurence[64])/size, '.', label=r'$m=64$', color='m')
+        plt.plot(degrees[2], np.array(occurence[2])/size, '.', label=r'$m=2$', color='black')
+        plt.plot(degrees[4], np.array(occurence[4])/size, '.', label=r'$m=4$', color='red')
+        plt.plot(degrees[8], np.array(occurence[8])/size, '.', label=r'$m=8$', color='royalblue')
+        plt.plot(degrees[16], np.array(occurence[16])/size, '.', label=r'$m=16$', color='forestgreen')
+        plt.plot(degrees[32], np.array(occurence[32])/size, '.', label=r'$m=32$', color='darkviolet')
+        plt.plot(degrees[64], np.array(occurence[64])/size, '.', label=r'$m=64$', color='chartreuse')
         x_space = [np.linspace(min(degrees[m]), max(degrees[m]), 1000) for m in ms]
-        plt.plot(x_space[0], deg_dist_theoretical_mi_2_3(x_space[0], m=2), '--', color='k')
-        plt.plot(x_space[1], deg_dist_theoretical_mi_2_3(x_space[1], m=4), '--', color='b')
-        plt.plot(x_space[2], deg_dist_theoretical_mi_2_3(x_space[2], m=8), '--', color='r')
-        plt.plot(x_space[3], deg_dist_theoretical_mi_2_3(x_space[3], m=16), '--', color='g')
-        plt.plot(x_space[4], deg_dist_theoretical_mi_2_3(x_space[4], m=32), '--', color='c')
-        plt.plot(x_space[5], deg_dist_theoretical_mi_2_3(x_space[5], m=64), '--', color='m')
+        plt.plot(x_space[0], deg_dist_theoretical_mi_2_3(x_space[0], m=2), '--', color='black')
+        plt.plot(x_space[1], deg_dist_theoretical_mi_2_3(x_space[1], m=4), '--', color='red')
+        plt.plot(x_space[2], deg_dist_theoretical_mi_2_3(x_space[2], m=8), '--', color='royalblue')
+        plt.plot(x_space[3], deg_dist_theoretical_mi_2_3(x_space[3], m=16), '--', color='forestgreen')
+        plt.plot(x_space[4], deg_dist_theoretical_mi_2_3(x_space[4], m=32), '--', color='darkviolet')
+        plt.plot(x_space[5], deg_dist_theoretical_mi_2_3(x_space[5], m=64), '--', color='chartreuse')
         plt.legend()
         plt.xlabel(r'$\it{k}$', fontname='Times New Roman', fontsize=17)
         plt.ylabel(r'$\it{n(k)}$', fontname='Times New Roman', fontsize=17)
@@ -754,16 +777,60 @@ def phase_3_task_1(compute=True, plot=False):
         ax.tick_params(which='minor', direction='in')
         plt.xticks(fontsize=12, fontname='Times New Roman')
         plt.yticks(fontsize=12, fontname='Times New Roman')
-        # plt.xlim(1e0, 2e3)
-        # plt.ylim(1e-4, 1e0)
-        plt.savefig('Plots/phase_3_task_1_i.png')
+        plt.xlim(1e0, 1e3)
+        plt.ylim(1e-6, 1e0)
+        plt.savefig('Plots/phase_3_task_1_q_2_3.png')
+        plt.show()
+
+        degrees = {}
+        occurence = {}
+        for m in ms:
+            file = open('Files/Phase3/phase_3_task_1_q_1_2_m'+str(m)+'.txt', 'rb')
+            degrees[m] = pickle.load(file)
+            occurence[m] = pickle.load(file)
+            file.close()
+
+        fig, ax = plt.subplots()
+        params = {'legend.fontsize': 12}
+        plt.rcParams.update(params)
+        matplotlib.rcParams['mathtext.fontset'] = 'custom'
+        matplotlib.rcParams['mathtext.rm'] = 'Bitstream Vera Sans'
+        matplotlib.rcParams['mathtext.it'] = 'Bitstream Vera Sans:italic'
+        matplotlib.rcParams['mathtext.bf'] = 'Bitstream Vera Sans:bold'
+        matplotlib.rcParams['mathtext.fontset'] = 'stix'
+        plt.plot(degrees[2], np.array(occurence[2])/size, '.', label=r'$m=2$', color='black')
+        plt.plot(degrees[4], np.array(occurence[4])/size, '.', label=r'$m=4$', color='red')
+        plt.plot(degrees[8], np.array(occurence[8])/size, '.', label=r'$m=8$', color='royalblue')
+        plt.plot(degrees[16], np.array(occurence[16])/size, '.', label=r'$m=16$', color='forestgreen')
+        plt.plot(degrees[32], np.array(occurence[32])/size, '.', label=r'$m=32$', color='darkviolet')
+        plt.plot(degrees[64], np.array(occurence[64])/size, '.', label=r'$m=64$', color='chartreuse')
+        x_space = [np.linspace(min(degrees[m]), max(degrees[m]), 1000) for m in ms]
+        plt.plot(x_space[0], deg_dist_theoretical_mi_1_2(x_space[0], m=2), '--', color='black')
+        plt.plot(x_space[1], deg_dist_theoretical_mi_1_2(x_space[1], m=4), '--', color='red')
+        plt.plot(x_space[2], deg_dist_theoretical_mi_1_2(x_space[2], m=8), '--', color='royalblue')
+        plt.plot(x_space[3], deg_dist_theoretical_mi_1_2(x_space[3], m=16), '--', color='forestgreen')
+        plt.plot(x_space[4], deg_dist_theoretical_mi_1_2(x_space[4], m=32), '--', color='darkviolet')
+        plt.plot(x_space[5], deg_dist_theoretical_mi_1_2(x_space[5], m=64), '--', color='chartreuse')
+        plt.legend()
+        plt.xlabel(r'$\it{k}$', fontname='Times New Roman', fontsize=17)
+        plt.ylabel(r'$\it{n(k)}$', fontname='Times New Roman', fontsize=17)
+        ax.set_xscale('log')
+        ax.set_yscale('log')
+        plt.minorticks_on()
+        ax.tick_params(direction='in')
+        ax.tick_params(which='minor', direction='in')
+        plt.xticks(fontsize=12, fontname='Times New Roman')
+        plt.yticks(fontsize=12, fontname='Times New Roman')
+        plt.xlim(1e0, 1e3)
+        plt.ylim(1e-6, 1e0)
+        plt.savefig('Plots/phase_3_task_1_q_1_2.png')
         plt.show()
 
 
 def phase_3_task_3(compute=True, plot=False):
     ms = [2, 4, 8, 16, 32, 64]
     size = int(1e4)
-    repetitions = [10*2**(6-n) for n in range(0, 6)]
+    repetitions = [100*2**(6-n) for n in range(0, 6)]
 
     if compute:
         bar = Bar('Code Running', max=int(size * sum(repetitions)))
@@ -790,7 +857,38 @@ def phase_3_task_3(compute=True, plot=False):
             x, y = logbin(master_array, scale=1.2)
             errors = combine_log_bins(big_x, big_y)
 
-            file = open('Files/Phase3/phase_3_task_3_m'+str(m)+'.txt', 'wb')
+            file = open('Files/Phase3/phase_3_task_3_q_2_3_m'+str(m)+'_N1e4.txt', 'wb')
+            pickle.dump(x, file)
+            pickle.dump(y, file)
+            pickle.dump(errors, file)
+            file.close()
+        bar.finish()
+
+        bar = Bar('Code Running', max=int(size * sum(repetitions)))
+
+        for i, m in enumerate(ms):
+            master_array = []
+            big_x = []
+            big_y = []
+
+            for _ in range(repetitions[i]):
+                graph, options = initialise_graph(size=(m+1), m=m)
+
+                for _ in range(size):
+                    graph, options = add_vertex(graph, options, m=m, method='mi', q=1/2)
+                    bar.next()
+
+                degrees = update_degrees(graph)
+                master_array.append(list(degrees.values()))
+                x, y = logbin(list(degrees.values()), scale=1.2)
+                big_x.append(list(x))
+                big_y.append(list(y))
+            
+            master_array = np.concatenate(master_array, 0)
+            x, y = logbin(master_array, scale=1.2)
+            errors = combine_log_bins(big_x, big_y)
+
+            file = open('Files/Phase3/phase_3_task_3_q_1_2_m'+str(m)+'_N1e4.txt', 'wb')
             pickle.dump(x, file)
             pickle.dump(y, file)
             pickle.dump(errors, file)
@@ -802,28 +900,19 @@ def phase_3_task_3(compute=True, plot=False):
         dists = {}
         errors = {}
         for m in ms:
-            file = open('Files/Phase3/phase_3_task_3_m'+str(m)+'.txt', 'rb')
+            file = open('Files/Phase3/phase_3_task_3_q_2_3_m'+str(m)+'_N1e4.txt', 'rb')
             degrees[m] = pickle.load(file)
             dists[m] = pickle.load(file)
             errors[m] = pickle.load(file)
             file.close()
 
         r_sq = [r2_score(deg_dist_theoretical_mi_2_3(degrees[m], m=m), dists[m]) for m in ms]
-        
-        chi_sq = []
-        for m in ms:
-            observed = size*np.array(dists[m])
-            indices = np.argwhere(observed<5)
-            indices = np.ndarray.flatten(indices)
-            observed = observed[observed>=5]
-            theoretical = np.delete(size*deg_dist_theoretical_mi_2_3(degrees[m], m=m), indices)
-            chi_sq.append(st.chisquare(observed, theoretical))
-        
+        chi_sq = [st.chisquare(deg_dist_theoretical_mi_2_3(degrees[m], m=m), dists[m]) for m in ms]
         ks_values = [st.ks_2samp(deg_dist_theoretical_mi_2_3(degrees[m], m=m), dists[m]) for m in ms]
 
-        print('R2 values: ', r_sq)
-        print('Chi_2 values: ', chi_sq)
-        print('KS Test values: ', ks_values)
+        print('\nR2 values: ', r_sq)
+        print('\nChi_2 values: ', chi_sq)
+        print('\nKS Test values: ', ks_values)
 
         fig, ax = plt.subplots()
         params = {'legend.fontsize': 12}
@@ -834,12 +923,12 @@ def phase_3_task_3(compute=True, plot=False):
         matplotlib.rcParams['mathtext.bf'] = 'Bitstream Vera Sans:bold'
         matplotlib.rcParams['mathtext.fontset'] = 'stix'  
 
-        plt.errorbar(degrees[2], dists[2], yerr=errors[2], marker = '.', ls = ' ', color='k', label=r'$m=2$')
-        plt.errorbar(degrees[4], dists[4], yerr=errors[4], marker = '.', ls = ' ', color='b', label=r'$m=4$')
-        plt.errorbar(degrees[8], dists[8], yerr=errors[8], marker = '.', ls = ' ', color='r', label=r'$m=8$')
-        plt.errorbar(degrees[16], dists[16], yerr=errors[16], marker = '.', ls = ' ', color='g', label=r'$m=16$')
-        plt.errorbar(degrees[32], dists[32], yerr=errors[32], marker = '.', ls = ' ', color='c', label=r'$m=32$')
-        plt.errorbar(degrees[64], dists[64], yerr=errors[64], marker = '.', ls = ' ', color='m', label=r'$m=64$')
+        plt.errorbar(degrees[2], dists[2], yerr=errors[2], marker = '.', ls = ' ', capsize=2, color='k', label=r'$m=2$')
+        plt.errorbar(degrees[4], dists[4], yerr=errors[4], marker = '.', ls = ' ', capsize=2, color='b', label=r'$m=4$')
+        plt.errorbar(degrees[8], dists[8], yerr=errors[8], marker = '.', ls = ' ', capsize=2, color='r', label=r'$m=8$')
+        plt.errorbar(degrees[16], dists[16], yerr=errors[16], marker = '.', ls = ' ', capsize=2, color='g', label=r'$m=16$')
+        plt.errorbar(degrees[32], dists[32], yerr=errors[32], marker = '.', ls = ' ', capsize=2, color='c', label=r'$m=32$')
+        plt.errorbar(degrees[64], dists[64], yerr=errors[64], marker = '.', ls = ' ', capsize=2, color='m', label=r'$m=64$')
 
         x_space = [np.linspace(min(degrees[m]), max(degrees[m]), 1000) for m in ms]
         plt.plot(x_space[0], deg_dist_theoretical_mi_2_3(x_space[0], m=2), '--', color='k')
@@ -861,15 +950,73 @@ def phase_3_task_3(compute=True, plot=False):
         plt.yticks(fontsize=12, fontname='Times New Roman')
         # plt.xlim(1e0, 1e3)
         # plt.ylim(1e-2, 1e5)
-        plt.savefig('Plots/phase_3_task_3_i.png')
+        plt.savefig('Plots/phase_3_task_3_q_2_3_N1e4.png')
+
+        plt.show()
+
+        degrees = {}
+        dists = {}
+        errors = {}
+        for m in ms:
+            file = open('Files/Phase3/phase_3_task_3_q_1_2_m'+str(m)+'_N1e4.txt', 'rb')
+            degrees[m] = pickle.load(file)
+            dists[m] = pickle.load(file)
+            errors[m] = pickle.load(file)
+            file.close()
+
+        r_sq = [r2_score(deg_dist_theoretical_mi_1_2(degrees[m], m=m), dists[m]) for m in ms]
+        chi_sq = [st.chisquare(deg_dist_theoretical_mi_1_2(degrees[m], m=m), dists[m]) for m in ms]
+        ks_values = [st.ks_2samp(deg_dist_theoretical_mi_1_2(degrees[m], m=m), dists[m]) for m in ms]
+
+        print('\nR2 values: ', r_sq)
+        print('\nChi_2 values: ', chi_sq)
+        print('\nKS Test values: ', ks_values)
+
+        fig, ax = plt.subplots()
+        params = {'legend.fontsize': 12}
+        plt.rcParams.update(params)
+        matplotlib.rcParams['mathtext.fontset'] = 'custom'
+        matplotlib.rcParams['mathtext.rm'] = 'Bitstream Vera Sans'
+        matplotlib.rcParams['mathtext.it'] = 'Bitstream Vera Sans:italic'
+        matplotlib.rcParams['mathtext.bf'] = 'Bitstream Vera Sans:bold'
+        matplotlib.rcParams['mathtext.fontset'] = 'stix'  
+
+        plt.errorbar(degrees[2], dists[2], yerr=errors[2], marker = '.', ls = ' ', capsize=2, color='k', label=r'$m=2$')
+        plt.errorbar(degrees[4], dists[4], yerr=errors[4], marker = '.', ls = ' ', capsize=2, color='b', label=r'$m=4$')
+        plt.errorbar(degrees[8], dists[8], yerr=errors[8], marker = '.', ls = ' ', capsize=2, color='r', label=r'$m=8$')
+        plt.errorbar(degrees[16], dists[16], yerr=errors[16], marker = '.', ls = ' ', capsize=2, color='g', label=r'$m=16$')
+        plt.errorbar(degrees[32], dists[32], yerr=errors[32], marker = '.', ls = ' ', capsize=2, color='c', label=r'$m=32$')
+        plt.errorbar(degrees[64], dists[64], yerr=errors[64], marker = '.', ls = ' ', capsize=2, color='m', label=r'$m=64$')
+
+        x_space = [np.linspace(min(degrees[m]), max(degrees[m]), 1000) for m in ms]
+        plt.plot(x_space[0], deg_dist_theoretical_mi_1_2(x_space[0], m=2), '--', color='k')
+        plt.plot(x_space[1], deg_dist_theoretical_mi_1_2(x_space[1], m=4), '--', color='b')
+        plt.plot(x_space[2], deg_dist_theoretical_mi_1_2(x_space[2], m=8), '--', color='r')
+        plt.plot(x_space[3], deg_dist_theoretical_mi_1_2(x_space[3], m=16), '--', color='g')
+        plt.plot(x_space[4], deg_dist_theoretical_mi_1_2(x_space[4], m=32), '--', color='c')
+        plt.plot(x_space[5], deg_dist_theoretical_mi_1_2(x_space[5], m=64), '--', color='m')
+
+        plt.legend()
+        plt.xlabel(r'$\it{k}$', fontname='Times New Roman', fontsize=17)
+        plt.ylabel(r'$\it{n(k)}$', fontname='Times New Roman', fontsize=17)
+        ax.set_xscale('log')
+        ax.set_yscale('log')
+        plt.minorticks_on()
+        ax.tick_params(direction='in')
+        ax.tick_params(which='minor', direction='in')
+        plt.xticks(fontsize=12, fontname='Times New Roman')
+        plt.yticks(fontsize=12, fontname='Times New Roman')
+        # plt.xlim(1e0, 1e3)
+        # plt.ylim(1e-2, 1e5)
+        plt.savefig('Plots/phase_3_task_3_q_1_2_N1e4.png')
 
         plt.show()
 
 
 def phase_3_task_4(compute=True, plot=False):
     m = 4
-    N = [10**n for n in range(2, 6)]
-    repetitions = [10**(5-n) for n in range(1, 5)]
+    N = [10**n for n in range(2, 7)]
+    repetitions = [10**(7-n) for n in range(1, 6)]
 
     if compute:
         bar = Bar('Code Running', max=int(np.dot(np.array(N), np.array(repetitions))))
@@ -890,9 +1037,7 @@ def phase_3_task_4(compute=True, plot=False):
                     bar.next()
 
                 degrees = update_degrees(graph)
-                
                 k_s.append(max(list(degrees.values())))
-                
                 master_array.append(list(degrees.values()))
                 x, y = logbin(list(degrees.values()), scale=1.2)
                 big_x.append(list(x))
@@ -904,28 +1049,67 @@ def phase_3_task_4(compute=True, plot=False):
             k_max.append(np.average(k_s))
             k_err.append(np.std(k_s)/np.sqrt(len(k_s)))
 
-            file = open('Files/Phase3/phase_3_task_4_m3_N'+str(n)+'.txt', 'wb')
+            file = open('Files/Phase3/phase_3_task_4_q_2_3_m3_N'+str(n)+'.txt', 'wb')
             pickle.dump(x, file)
             pickle.dump(y, file)
             pickle.dump(errors, file)
             file.close()
-        file = open('Files/Phase3/phase_3_task_4_k.txt', 'wb')
+        file = open('Files/Phase3/phase_3_task_4_q_2_3_k.txt', 'wb')
         pickle.dump(k_max, file)
         pickle.dump(k_err, file)
         file.close()
 
+        bar = Bar('Code Running', max=int(np.dot(np.array(N), np.array(repetitions))))
+
+        k_max = []
+        k_err = []
+        for i, n in enumerate(N):
+            master_array = []
+            big_x = []
+            big_y = []
+            
+            k_s = []
+            for r in range(repetitions[i]):
+                graph, options = initialise_graph(size=(m+1), m=m)
+
+                for _ in range(n):
+                    graph, options = add_vertex(graph, options, m=m, method='mi', q=1/2)    
+                    bar.next()
+
+                degrees = update_degrees(graph)
+                k_s.append(max(list(degrees.values())))
+                master_array.append(list(degrees.values()))
+                x, y = logbin(list(degrees.values()), scale=1.2)
+                big_x.append(list(x))
+                big_y.append(list(y))
+            
+            master_array = np.concatenate(master_array, 0)
+            x, y = logbin(master_array, scale=1.2)
+            errors = combine_log_bins(big_x, big_y)
+            k_max.append(np.average(k_s))
+            k_err.append(np.std(k_s)/np.sqrt(len(k_s)))
+
+            file = open('Files/Phase3/phase_3_task_4_q_1_2_m3_N'+str(n)+'.txt', 'wb')
+            pickle.dump(x, file)
+            pickle.dump(y, file)
+            pickle.dump(errors, file)
+            file.close()
+        file = open('Files/Phase3/phase_3_task_4_q_1_2_k.txt', 'wb')
+        pickle.dump(k_max, file)
+        pickle.dump(k_err, file)
+        file.close()
 
     if plot:
         degrees = {}
         dists = {}
         errors = {}
         for n in N:
-            file = open('Files/Phase3/phase_3_task_4_m3_N'+str(n)+'.txt', 'rb')
+            file = open('Files/Phase3/phase_3_task_4_q_2_3_m3_N'+str(n)+'.txt', 'rb')
             degrees[n] = pickle.load(file)
             dists[n] = pickle.load(file)
             errors[n] = pickle.load(file)
             file.close()
-        file = open('Files/Phase3/phase_3_task_4_k.txt', 'rb')
+        file = open('Files/Phase3/phase_3_task_4_q_2_3_k.txt', 'rb')
         k_max = pickle.load(file)
         k_err = pickle.load(file)
         
@@ -955,7 +1139,7 @@ def phase_3_task_4(compute=True, plot=False):
         ax.tick_params(which='minor', direction='in')
         plt.xticks(fontsize=12, fontname='Times New Roman')
         plt.yticks(fontsize=12, fontname='Times New Roman')
-        plt.savefig('Plots/phase_3_task_4_i.png')
+        plt.savefig('Plots/phase_3_task_4_q_2_3_i.png')
 
         fig, ax = plt.subplots()
         params = {'legend.fontsize': 12}
@@ -979,7 +1163,7 @@ def phase_3_task_4(compute=True, plot=False):
         plt.yticks(fontsize=12, fontname='Times New Roman')
         # plt.xlim(1e0, 1e3)
         plt.ylim(1e1, 1e3)
-        plt.savefig('Plots/phase_3_task_4_ii.png')
+        plt.savefig('Plots/phase_3_task_4_q_2_3_ii.png')
 
         fig, ax = plt.subplots()
         params = {'legend.fontsize': 12}
@@ -990,10 +1174,14 @@ def phase_3_task_4(compute=True, plot=False):
         matplotlib.rcParams['mathtext.bf'] = 'Bitstream Vera Sans:bold'
         matplotlib.rcParams['mathtext.fontset'] = 'stix'
 
-        plt.errorbar(degrees[100]/k_max[0], dists[100]/deg_dist_theoretical_mi_2_3(degrees[100], m=4),  yerr=errors[100]/deg_dist_theoretical_pa(degrees[100], m=4), marker = '.', ls = ' ', color='b', label=r'$Data: \: N=100$')
-        plt.errorbar(degrees[1000]/k_max[1], dists[1000]/deg_dist_theoretical_mi_2_3(degrees[1000], m=4),  yerr=errors[1000]/deg_dist_theoretical_pa(degrees[1000], m=4), marker = '.', ls = ' ', color='g', label=r'$Data: \: N=1000$')
-        plt.errorbar(degrees[10000]/k_max[2], dists[10000]/deg_dist_theoretical_mi_2_3(degrees[10000], m=4),  yerr=errors[10000]/deg_dist_theoretical_pa(degrees[10000], m=4), marker = '.', ls = ' ', color='r', label=r'$Data: \: N=10000$')
-        plt.errorbar(degrees[100000]/k_max[3], dists[100000]/deg_dist_theoretical_mi_2_3(degrees[100000], m=4), yerr=errors[100000]/deg_dist_theoretical_pa(degrees[100000], m=4), marker = '.', ls = ' ', color='c', label=r'$Data: \: N=100000$')        
+        plt.errorbar(degrees[100]/k_max[0], dists[100]/deg_dist_theoretical_mi_2_3(degrees[100], m=4), \
+            yerr=errors[100]/deg_dist_theoretical_mi_2_3(degrees[100], m=4), marker = '.', ls = ' ', color='b', label=r'$Data: \: N=100$')
+        plt.errorbar(degrees[1000]/k_max[1], dists[1000]/deg_dist_theoretical_mi_2_3(degrees[1000], m=4), \
+            yerr=errors[1000]/deg_dist_theoretical_mi_2_3(degrees[1000], m=4), marker = '.', ls = ' ', color='g', label=r'$Data: \: N=1000$')
+        plt.errorbar(degrees[10000]/k_max[2], dists[10000]/deg_dist_theoretical_mi_2_3(degrees[10000], m=4), \
+            yerr=errors[10000]/deg_dist_theoretical_mi_2_3(degrees[10000], m=4), marker = '.', ls = ' ', color='r', label=r'$Data: \: N=10000$')
+        plt.errorbar(degrees[100000]/k_max[3], dists[100000]/deg_dist_theoretical_mi_2_3(degrees[100000], m=4), \
+            yerr=errors[100000]/deg_dist_theoretical_mi_2_3(degrees[100000], m=4), marker = '.', ls = ' ', color='c', label=r'$Data: \: N=100000$')        
         plt.legend()
         plt.xlabel(r'$\it{k/k_1}$', fontname='Times New Roman', fontsize=17)
         plt.ylabel(r'$\it{p(k) \: / \: p_{\infty}(k)}$', fontname='Times New Roman', fontsize=17)
@@ -1004,12 +1192,110 @@ def phase_3_task_4(compute=True, plot=False):
         ax.tick_params(which='minor', direction='in')
         plt.xticks(fontsize=12, fontname='Times New Roman')
         plt.yticks(fontsize=12, fontname='Times New Roman')
-        plt.savefig('Plots/phase_3_task_4_iii.png')
+        plt.savefig('Plots/phase_3_task_4_q_2_3_iii.png')
+
+        plt.show()
+
+        degrees = {}
+        dists = {}
+        errors = {}
+        for n in N:
+            file = open('Files/Phase3/phase_3_task_4_q_1_2_m3_N'+str(n)+'.txt', 'rb')
+            degrees[n] = pickle.load(file)
+            dists[n] = pickle.load(file)
+            errors[n] = pickle.load(file)
+            file.close()
+        file = open('Files/Phase3/phase_3_task_4_q_1_2_k.txt', 'rb')
+        k_max = pickle.load(file)
+        k_err = pickle.load(file)
+        
+        fig, ax = plt.subplots()
+        params = {'legend.fontsize': 12}
+        plt.rcParams.update(params)
+        matplotlib.rcParams['mathtext.fontset'] = 'custom'
+        matplotlib.rcParams['mathtext.rm'] = 'Bitstream Vera Sans'
+        matplotlib.rcParams['mathtext.it'] = 'Bitstream Vera Sans:italic'
+        matplotlib.rcParams['mathtext.bf'] = 'Bitstream Vera Sans:bold'
+        matplotlib.rcParams['mathtext.fontset'] = 'stix'       
+        plt.errorbar(degrees[100], dists[100],  yerr=errors[100], marker = '.', ls = ' ', color='b', label=r'$Data: \: N=100$')
+        plt.errorbar(degrees[1000], dists[1000],  yerr=errors[1000], marker = '.', ls = ' ', color='g', label=r'$Data: \: N=1000$')
+        plt.errorbar(degrees[10000], dists[10000],  yerr=errors[10000], marker = '.', ls = ' ', color='r', label=r'$Data: \: N=10000$')
+        plt.errorbar(degrees[100000], dists[100000], yerr=errors[100000], marker = '.', ls = ' ', color='c', label=r'$Data: \: N=100000$')
+
+        x_space = np.linspace(min(degrees[100]), max(degrees[100000]), 1000)
+        plt.plot(x_space, deg_dist_theoretical_mi_1_2(x_space, m=4), '--', color='k', label=r'$Theoretical \: Data: \: m=4$')
+
+        plt.legend()
+        plt.xlabel(r'$\it{k}$', fontname='Times New Roman', fontsize=17)
+        plt.ylabel(r'$\it{n(k)}$', fontname='Times New Roman', fontsize=17)
+        ax.set_xscale('log')
+        ax.set_yscale('log')
+        plt.minorticks_on()
+        ax.tick_params(direction='in')
+        ax.tick_params(which='minor', direction='in')
+        plt.xticks(fontsize=12, fontname='Times New Roman')
+        plt.yticks(fontsize=12, fontname='Times New Roman')
+        plt.savefig('Plots/phase_3_task_4_q_1_2_i.png')
+
+        fig, ax = plt.subplots()
+        params = {'legend.fontsize': 12}
+        plt.rcParams.update(params)
+        matplotlib.rcParams['mathtext.fontset'] = 'custom'
+        matplotlib.rcParams['mathtext.rm'] = 'Bitstream Vera Sans'
+        matplotlib.rcParams['mathtext.it'] = 'Bitstream Vera Sans:italic'
+        matplotlib.rcParams['mathtext.bf'] = 'Bitstream Vera Sans:bold'
+        matplotlib.rcParams['mathtext.fontset'] = 'stix'
+        plt.errorbar(N, k_max,  yerr=k_err, marker = '.', ls = ' ', color='b', label=r'$Data$')
+
+        plt.legend()
+        plt.xlabel(r'$\it{N}$', fontname='Times New Roman', fontsize=17)
+        plt.ylabel(r'$\it{k_1}$', fontname='Times New Roman', fontsize=17)
+        ax.set_xscale('log')
+        ax.set_yscale('log')
+        plt.minorticks_off()
+        ax.tick_params(direction='in')
+        ax.tick_params(which='minor', direction='in')
+        plt.xticks(fontsize=12, fontname='Times New Roman')
+        plt.yticks(fontsize=12, fontname='Times New Roman')
+        # plt.xlim(1e0, 1e3)
+        plt.ylim(1e1, 1e3)
+        plt.savefig('Plots/phase_3_task_4_q_1_2_ii.png')
+
+        fig, ax = plt.subplots()
+        params = {'legend.fontsize': 12}
+        plt.rcParams.update(params)
+        matplotlib.rcParams['mathtext.fontset'] = 'custom'
+        matplotlib.rcParams['mathtext.rm'] = 'Bitstream Vera Sans'
+        matplotlib.rcParams['mathtext.it'] = 'Bitstream Vera Sans:italic'
+        matplotlib.rcParams['mathtext.bf'] = 'Bitstream Vera Sans:bold'
+        matplotlib.rcParams['mathtext.fontset'] = 'stix'
+
+        plt.errorbar(degrees[100]/k_max[0], dists[100]/deg_dist_theoretical_mi_1_2(degrees[100], m=4), \
+            yerr=errors[100]/deg_dist_theoretical_mi_1_2(degrees[100], m=4), marker = '.', ls = ' ', color='b', label=r'$Data: \: N=100$')
+        plt.errorbar(degrees[1000]/k_max[1], dists[1000]/deg_dist_theoretical_mi_1_2(degrees[1000], m=4), \
+            yerr=errors[1000]/deg_dist_theoretical_mi_1_2(degrees[1000], m=4), marker = '.', ls = ' ', color='g', label=r'$Data: \: N=1000$')
+        plt.errorbar(degrees[10000]/k_max[2], dists[10000]/deg_dist_theoretical_mi_1_2(degrees[10000], m=4), \
+            yerr=errors[10000]/deg_dist_theoretical_mi_1_2(degrees[10000], m=4), marker = '.', ls = ' ', color='r', label=r'$Data: \: N=10000$')
+        plt.errorbar(degrees[100000]/k_max[3], dists[100000]/deg_dist_theoretical_mi_1_2(degrees[100000], m=4), \
+            yerr=errors[100000]/deg_dist_theoretical_mi_1_2(degrees[100000], m=4), marker = '.', ls = ' ', color='c', label=r'$Data: \: N=100000$')        
+        plt.legend()
+        plt.xlabel(r'$\it{k/k_1}$', fontname='Times New Roman', fontsize=17)
+        plt.ylabel(r'$\it{p(k) \: / \: p_{\infty}(k)}$', fontname='Times New Roman', fontsize=17)
+        ax.set_xscale('log')
+        ax.set_yscale('log')
+        plt.minorticks_on()
+        ax.tick_params(direction='in')
+        ax.tick_params(which='minor', direction='in')
+        plt.xticks(fontsize=12, fontname='Times New Roman')
+        plt.yticks(fontsize=12, fontname='Times New Roman')
+        plt.savefig('Plots/phase_3_task_4_q_1_2_iii.png')
 
         plt.show()
 
 
 def combine_log_bins(data_x, data_y):
+    """ This method takes the average and std of logbin-ed data """
+    
     data_x_final = np.unique(np.concatenate(data_x, 0))
     data_y_final = []
     errors = []
