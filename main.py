@@ -172,9 +172,17 @@ def phase_1_task_3(compute=True, plot=False):
         chi_sq = [st.chisquare(deg_dist_theoretical_pa(degrees[m], m=m), dists[m]) for m in ms]
         ks_values = [st.ks_2samp(deg_dist_theoretical_pa(degrees[m], m=m), dists[m]) for m in ms]
 
+        r_sq_tr = [r2_score(deg_dist_theoretical_pa(degrees[m][1:-10], m=m), dists[m][1:-10]) for m in ms]
+        chi_sq_tr = [st.chisquare(deg_dist_theoretical_pa(degrees[m][1:-10], m=m), dists[m][1:-10]) for m in ms]
+        ks_values_tr = [st.ks_2samp(deg_dist_theoretical_pa(degrees[m][1:-10], m=m), dists[m][1:-10]) for m in ms]
+
         print('\nR2 values: ', r_sq)
         print('\nChi_2 values: ', chi_sq)
         print('\nKS Test values: ', ks_values)
+
+        print('\nR2 values: ', r_sq_tr)
+        print('\nChi_2 values: ', chi_sq_tr)
+        print('\nKS Test values: ', ks_values_tr)
 
         fig, ax = plt.subplots()
         params = {'legend.fontsize': 12}
@@ -230,31 +238,24 @@ def phase_1_task_3(compute=True, plot=False):
         matplotlib.rcParams['mathtext.bf'] = 'Bitstream Vera Sans:bold'
         matplotlib.rcParams['mathtext.fontset'] = 'stix'
 
-        plt.plot(degrees[2][1:]/max(degrees[2][1:]), abs((dists[2][1:]-deg_dist_theoretical_pa(degrees[2], m=2)[1:])/deg_dist_theoretical_pa(degrees[2])[1:]), \
-            'o', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$m=2$')
-        plt.plot(degrees[4][1:]/max(degrees[4][1:]), abs((dists[4][1:]-deg_dist_theoretical_pa(degrees[4], m=4)[1:])/deg_dist_theoretical_pa(degrees[4])[1:]), \
-            'o', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$m=4$')
-        plt.plot(degrees[8][1:]/max(degrees[8][1:]), abs((dists[8][1:]-deg_dist_theoretical_pa(degrees[8], m=8)[1:])/deg_dist_theoretical_pa(degrees[8])[1:]), \
-            'o', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$m=8$')
-        plt.plot(degrees[16][1:]/max(degrees[16][1:]), abs((dists[16][1:]-deg_dist_theoretical_pa(degrees[16], m=16)[1:])/deg_dist_theoretical_pa(degrees[16])[1:]), \
-            'o', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$m=16$')
-        plt.plot(degrees[32][1:]/max(degrees[32][1:]), abs((dists[32][1:]-deg_dist_theoretical_pa(degrees[32], m=32)[1:])/deg_dist_theoretical_pa(degrees[32])[1:]), \
-            'o', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$m=32$')
-        plt.plot(degrees[64][1:]/max(degrees[64][1:]), abs((dists[64][1:]-deg_dist_theoretical_pa(degrees[64], m=64)[1:])/deg_dist_theoretical_pa(degrees[64])[1:]), \
-            'o', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$m=64$')
-
+        plt.plot(degrees[2][1:]/max(degrees[2]), abs(deg_dist_theoretical_pa(degrees[2], m=2)[1:]-dists[2][1:])/deg_dist_theoretical_pa(degrees[2], m=2)[1:], 'o', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$m=2$')
+        plt.plot(degrees[4][1:]/max(degrees[4]), abs(deg_dist_theoretical_pa(degrees[4], m=4)[1:]-dists[4][1:])/deg_dist_theoretical_pa(degrees[4], m=4)[1:], 'o', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$m=4$')
+        plt.plot(degrees[8][1:]/max(degrees[8]), abs(deg_dist_theoretical_pa(degrees[8], m=8)[1:]-dists[8][1:])/deg_dist_theoretical_pa(degrees[8], m=8)[1:], 'o', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$m=8$')
+        plt.plot(degrees[16][1:]/max(degrees[16]), abs(deg_dist_theoretical_pa(degrees[16], m=16)[1:]-dists[16][1:])/deg_dist_theoretical_pa(degrees[16], m=16)[1:], 'o', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$m=16$')
+        plt.plot(degrees[32][1:]/max(degrees[32]), abs(deg_dist_theoretical_pa(degrees[32], m=32)[1:]-dists[32][1:])/deg_dist_theoretical_pa(degrees[32], m=32)[1:], 'o', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$m=32$')
+        plt.plot(degrees[64][1:]/max(degrees[64]), abs(deg_dist_theoretical_pa(degrees[64], m=64)[1:]-dists[64][1:])/deg_dist_theoretical_pa(degrees[64], m=64)[1:], 'o', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$m=64$')
+        
         plt.legend()
         plt.xlabel(r'$\it{k/k_1}$', fontname='Times New Roman', fontsize=17)
-        plt.ylabel(r'$\it{\% \: residuals}$', fontname='Times New Roman', fontsize=17)
+        plt.ylabel(r'$\it{Relative \: Residuals}$', fontname='Times New Roman', fontsize=17)
         ax.set_xscale('log')
-        ax.set_yscale('log')
         plt.minorticks_on()
         ax.tick_params(direction='in')
         ax.tick_params(which='minor', direction='in')
         plt.xticks(fontsize=12, fontname='Times New Roman')
         plt.yticks(fontsize=12, fontname='Times New Roman')
         plt.xlim(1e-3, 1e0)
-        plt.ylim(1e-5, 1e5)
+        plt.ylim(0, 4)
         plt.savefig('Plots/phase_1_task_3_residuals_N1e5_logbin_1_1.png')
 
         plt.show()
