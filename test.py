@@ -1,16 +1,19 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from matplotlib.legend_handler import HandlerLine2D, HandlerTuple
 
-def deg_dist_theoretical_ra(k, m=2):
-    return ((m/(m+1))**(k-m))*(1/(1+m))
+n = np.linspace(0, 100, 100)
 
-n = np.linspace(80, 500, 1000)
+f = lambda x: x
+g = lambda x: 2*x
 
-y = deg_dist_theoretical_ra(n, m=64)
+y1 = f(n)
+y2 = g(n)
 
 fig, ax = plt.subplots()
-plt.plot(n, y, '--')
-ax.set_xscale('log')
-ax.set_yscale('log')
+p1, = plt.plot(n, y1, '--')
+p2, = plt.plot(n, y2, '.')
+l = plt.legend([(p1, p2)], ['Two keys'], numpoints=1,
+               handler_map={tuple: HandlerTuple(ndivide=None)})
 plt.show()

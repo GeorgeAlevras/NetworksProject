@@ -25,7 +25,7 @@ Additional Dependencies: argparse, sys, time, pickle, collections, math
 
     This file is run as a script to verify that the BA model works correctly. Run individual tests
     to ensure that the model is sensible and follows the theoretical predictions.
-    It contains the 2 following testing methods:
+    It contains the 4 following testing methods:
             1. test_adjacency_list: Tests adjacency list for being 'sensible', i.e. no duplicates and symmetry,
                 by converting it to an adjacency matrix and checking it.
             2. test_average_degrees: Tests that the average number of degrees in the system is approximately

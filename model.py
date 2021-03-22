@@ -2,7 +2,7 @@ import numpy as np
 import random as rnd
 
 """
-Georgios Alevras - 20/03/2021
+Georgios Alevras - 24/03/2021
 -----------------------------
 Python Version used: 3.8.2
 Numpy Version used: 1.19.1
@@ -133,12 +133,12 @@ def deg_dist_theoretical_mi_1_2(k, m=2):
 
 def k_max_pa(N, m):
     # Theoretical expected largest degree for preferential attachment
-    return (-1 + np.sqrt(1 + 4*N*m*(m+1))*0.5)
+    return -1 + 0.5*np.sqrt(1+4*N*m*(m+1))
 
 
 def k_max_ra(N, m):
     # Theoretical expected largest degree for random attachment
-    return m - (np.log(N))/(np.log(m) - np.log(m + 1))
+    return m + np.log(N)/np.log((1+m)/m)
 
 
 if __name__ == '__main__':
