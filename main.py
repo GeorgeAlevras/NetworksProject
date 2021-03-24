@@ -173,7 +173,7 @@ def phase_1_task_3(compute=True, plot=False):
         ks_values = [st.ks_2samp(deg_dist_theoretical_pa(degrees[m], m=m), dists[m]) for m in ms]
 
         r_sq_tr = [r2_score(deg_dist_theoretical_pa(degrees[m][1:-10], m=m), dists[m][1:-10]) for m in ms]
-        chi_sq_tr = [st.chisquare(deg_dist_theoretical_pa(degrees[m][1:-10], m=m), dists[m][1:-10]) for m in ms]
+        chi_sq_tr = [st.chisquare(size*deg_dist_theoretical_pa(degrees[m][1:-10], m=m), size*dists[m][1:-10]) for m in ms]
         ks_values_tr = [st.ks_2samp(deg_dist_theoretical_pa(degrees[m][1:-10], m=m), dists[m][1:-10]) for m in ms]
 
         print('\nR2 values: ', r_sq)
