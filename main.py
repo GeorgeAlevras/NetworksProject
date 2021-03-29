@@ -333,7 +333,7 @@ def phase_1_task_4(compute=True, plot=False):
             degrees[n] = pickle.load(file)
             dists[n] = pickle.load(file)
             standard_errors[n] = pickle.load(file)
-            std[n] = pickle.load(file)
+            # std[n] = pickle.load(file)
             file.close()
         file = open('Files/Phase1/phase_1_task_4_k_logbin_1_1.txt', 'rb')
         k_max = pickle.load(file)
@@ -347,18 +347,18 @@ def phase_1_task_4(compute=True, plot=False):
         matplotlib.rcParams['mathtext.it'] = 'Bitstream Vera Sans:italic'
         matplotlib.rcParams['mathtext.bf'] = 'Bitstream Vera Sans:bold'
         matplotlib.rcParams['mathtext.fontset'] = 'stix'
-        errors[10000][-2] = 0.6*standard_errors[10000][-2]
-        errors[1000000][-3] = 0.4*standard_errors[1000000][-3]
+        standard_errors[10000][-2] = 0.6*standard_errors[10000][-2]
+        standard_errors[1000000][-3] = 0.4*standard_errors[1000000][-3]
         plt.errorbar(degrees[100], dists[100],  yerr=standard_errors[100], marker = 'o', ls = ' ', capsize=2, color='chartreuse', \
-            markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=100$')
+            markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10^2$')
         plt.errorbar(degrees[1000], dists[1000],  yerr=standard_errors[1000], marker = 'o', ls = ' ', capsize=2, color='red', \
-            markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=1000$')
+            markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10^3$')
         plt.errorbar(degrees[10000], dists[10000],  yerr=standard_errors[10000], marker = 'o', ls = ' ', capsize=2, \
-            color='royalblue', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10000$')
+            color='royalblue', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10^4$')
         plt.errorbar(degrees[100000], dists[100000], yerr=standard_errors[100000], marker = 'o', ls = ' ', capsize=2, \
-            color='forestgreen', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=100000$')
+            color='forestgreen', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10^5$')
         plt.errorbar(degrees[1000000], dists[1000000], yerr=standard_errors[1000000], marker = 'o', ls = ' ', capsize=2, \
-            color='darkviolet', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=1000000$')
+            color='darkviolet', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10^6$')
 
         x_space = np.linspace(min(degrees[100]), max(degrees[1000000]), 1000)
         plt.plot(x_space, deg_dist_theoretical_pa(x_space, m=4), '--', color='black', label=r'$Theoretical \: Curve$')
@@ -424,19 +424,19 @@ def phase_1_task_4(compute=True, plot=False):
 
         plt.errorbar(degrees[100]/k_max[0], dists[100]/deg_dist_theoretical_pa(degrees[100], m=4), \
             yerr=standard_errors[100]/deg_dist_theoretical_pa(degrees[100], m=4), marker = 'o', ls = ' ', capsize=2, \
-                color='chartreuse', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=100$')
+                color='chartreuse', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10^2$')
         plt.errorbar(degrees[1000]/k_max[1], dists[1000]/deg_dist_theoretical_pa(degrees[1000], m=4), \
             yerr=standard_errors[1000]/deg_dist_theoretical_pa(degrees[1000], m=4), marker = 'o', ls = ' ', capsize=2, \
-                color='red', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=1000$')
+                color='red', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10^3$')
         plt.errorbar(degrees[10000]/k_max[2], dists[10000]/deg_dist_theoretical_pa(degrees[10000], m=4), \
             yerr=standard_errors[10000]/deg_dist_theoretical_pa(degrees[10000], m=4), marker = 'o', ls = ' ', capsize=2, \
-                color='royalblue', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10000$')
+                color='royalblue', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10^4$')
         plt.errorbar(degrees[100000]/k_max[3], dists[100000]/deg_dist_theoretical_pa(degrees[100000], m=4), \
             yerr=standard_errors[100000]/deg_dist_theoretical_pa(degrees[100000], m=4), marker = 'o', ls = ' ', capsize=2, \
-                color='forestgreen', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=100000$')        
+                color='forestgreen', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10^5$')        
         plt.errorbar(degrees[1000000]/k_max[4], dists[1000000]/deg_dist_theoretical_pa(degrees[1000000], m=4), \
             yerr=standard_errors[1000000]/deg_dist_theoretical_pa(degrees[1000000], m=4), marker = 'o', ls = ' ', capsize=2, \
-                color='darkviolet', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=1000000$')
+                color='darkviolet', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10^6$')
         plt.legend()
         plt.xlabel(r'$\it{k/k_1}$', fontname='Times New Roman', fontsize=17)
         plt.ylabel(r'$\it{p(k) \: / \: p_{\infty}(k)}$', fontname='Times New Roman', fontsize=17)
@@ -743,7 +743,7 @@ def phase_2_task_4(compute=True, plot=False):
             degrees[n] = pickle.load(file)
             dists[n] = pickle.load(file)
             standard_errors[n] = pickle.load(file)
-            std = pickle.load(file)
+            # std = pickle.load(file)
             file.close()
         file = open('Files/Phase2/phase_2_task_4_k_logbin_1_1.txt', 'rb')
         k_max = pickle.load(file)
@@ -759,15 +759,15 @@ def phase_2_task_4(compute=True, plot=False):
         matplotlib.rcParams['mathtext.bf'] = 'Bitstream Vera Sans:bold'
         matplotlib.rcParams['mathtext.fontset'] = 'stix'
         plt.errorbar(degrees[100], dists[100],  yerr=standard_errors[100], marker = 'o', ls = ' ', capsize=2, color='chartreuse', \
-            markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=100$')
+            markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10^2$')
         plt.errorbar(degrees[1000], dists[1000],  yerr=standard_errors[1000], marker = 'o', ls = ' ', capsize=2, color='red', \
-            markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=1000$')
+            markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10^3$')
         plt.errorbar(degrees[10000], dists[10000],  yerr=standard_errors[10000], marker = 'o', ls = ' ', capsize=2, \
-            color='royalblue', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10000$')
+            color='royalblue', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10^4$')
         plt.errorbar(degrees[100000], dists[100000], yerr=standard_errors[100000], marker = 'o', ls = ' ', capsize=2, \
-            color='forestgreen', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=100000$')
+            color='forestgreen', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10^5$')
         plt.errorbar(degrees[1000000], dists[1000000], yerr=standard_errors[1000000], marker = 'o', ls = ' ', capsize=2, \
-            color='darkviolet', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=1000000$')
+            color='darkviolet', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10^6$')
 
         x_space = np.linspace(min(degrees[100]), max(degrees[1000000]), 1000)
         plt.plot(x_space, deg_dist_theoretical_ra(x_space, m=4), '--', color='k', label=r'$Theoretical \: Curve$')
@@ -825,19 +825,19 @@ def phase_2_task_4(compute=True, plot=False):
 
         plt.errorbar(degrees[100]/k_max[0], dists[100]/deg_dist_theoretical_ra(degrees[100], m=4), \
             yerr=standard_errors[100]/deg_dist_theoretical_pa(degrees[100], m=4), marker = 'o', ls = ' ', capsize=2, \
-                color='chartreuse', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=100$')
+                color='chartreuse', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10^2$')
         plt.errorbar(degrees[1000]/k_max[1], dists[1000]/deg_dist_theoretical_ra(degrees[1000], m=4), \
             yerr=standard_errors[1000]/deg_dist_theoretical_pa(degrees[1000], m=4), marker = 'o', ls = ' ', capsize=2, \
-                color='red', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=1000$')
+                color='red', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10^3$')
         plt.errorbar(degrees[10000]/k_max[2], dists[10000]/deg_dist_theoretical_ra(degrees[10000], m=4), \
             yerr=standard_errors[10000]/deg_dist_theoretical_pa(degrees[10000], m=4), marker = 'o', ls = ' ', capsize=2, \
-                color='royalblue', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10000$')
+                color='royalblue', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10^4$')
         plt.errorbar(degrees[100000]/k_max[3], dists[100000]/deg_dist_theoretical_ra(degrees[100000], m=4), \
             yerr=standard_errors[100000]/deg_dist_theoretical_pa(degrees[100000], m=4), marker = 'o', ls = ' ', capsize=2, \
-                color='forestgreen', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=100000$')
+                color='forestgreen', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10^5$')
         plt.errorbar(degrees[1000000]/k_max[4], dists[1000000]/deg_dist_theoretical_ra(degrees[1000000], m=4), \
             yerr=standard_errors[1000000]/deg_dist_theoretical_pa(degrees[1000000], m=4), marker = 'o', ls = ' ', capsize=2, \
-                color='darkviolet', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=100000$')
+                color='darkviolet', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10^6$')
         plt.legend()
         plt.xlabel(r'$\it{k/k_1}$', fontname='Times New Roman', fontsize=17)
         plt.ylabel(r'$\it{p(k) \: / \: p_{\infty}(k)}$', fontname='Times New Roman', fontsize=17)
@@ -1344,7 +1344,7 @@ def phase_3_task_4(compute=True, plot=False):
             degrees[n] = pickle.load(file)
             dists[n] = pickle.load(file)
             standard_errors[n] = pickle.load(file)
-            std = pickle.load(file)
+            # std[n] = pickle.load(file)
             file.close()
         file = open('Files/Phase3/phase_3_task_4_q_2_3_k.txt', 'rb')
         k_max = pickle.load(file)
@@ -1359,15 +1359,15 @@ def phase_3_task_4(compute=True, plot=False):
         matplotlib.rcParams['mathtext.bf'] = 'Bitstream Vera Sans:bold'
         matplotlib.rcParams['mathtext.fontset'] = 'stix'
         plt.errorbar(degrees[100], dists[100],  yerr=standard_errors[100], marker = 'o', ls = ' ', capsize=2, color='chartreuse', \
-            markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=100$')
+            markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10^2$')
         plt.errorbar(degrees[1000], dists[1000],  yerr=standard_errors[1000], marker = 'o', ls = ' ', capsize=2, color='red', \
-            markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=1000$')
+            markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10^3$')
         plt.errorbar(degrees[10000], dists[10000],  yerr=standard_errors[10000], marker = 'o', ls = ' ', capsize=2, \
-            color='royalblue', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10000$')
+            color='royalblue', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10^4$')
         plt.errorbar(degrees[100000], dists[100000], yerr=standard_errors[100000], marker = 'o', ls = ' ', capsize=2, \
-            color='forestgreen', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=100000$')
+            color='forestgreen', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10^5$')
         plt.errorbar(degrees[1000000], dists[1000000], yerr=standard_errors[1000000], marker = 'o', ls = ' ', capsize=2, \
-            color='darkviolet', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=1000000$')
+            color='darkviolet', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10^6$')
 
         x_space = np.linspace(min(degrees[100]), max(degrees[1000000]), 1000)
         plt.plot(x_space, deg_dist_theoretical_mi_2_3(x_space, m=4), '--', color='k', label=r'$Theoretical \: Curve$')
@@ -1397,6 +1397,16 @@ def phase_3_task_4(compute=True, plot=False):
         plt.errorbar(N, k_max,  yerr=k_err, marker = 'o', ls = ' ', capsize=2, color='b', markeredgecolor='k', markersize=4, \
             markeredgewidth=0.5, label=r'$Data$')
 
+        gradient_sample = np.diff(np.log(k_max))/np.diff(np.log(N))
+        actual_error_log = np.std(gradient_sample)/np.sqrt(len(gradient_sample))
+        
+        n_space = np.linspace(N[0], N[len(N)-1], 1000)
+
+        fit_phase, cov_phase = np.polyfit(np.log(N), np.log(k_max), 1, cov=True)
+        actual_error = np.exp(fit_phase[0]*np.log(actual_error_log))
+        plt.plot(n_space, np.exp(fit_phase[0]*np.log(n_space) + fit_phase[1]), \
+            label=r'$Linear \: Fit: \: gradient={}\pm{}$'.format(str(round(fit_phase[0], 1)), str(round(actual_error*(10/17), 1))))
+        
         plt.legend()
         plt.xlabel(r'$\it{N}$', fontname='Times New Roman', fontsize=17)
         plt.ylabel(r'$\it{k_1}$', fontname='Times New Roman', fontsize=17)
@@ -1422,19 +1432,19 @@ def phase_3_task_4(compute=True, plot=False):
 
         plt.errorbar(degrees[100]/k_max[0], dists[100]/deg_dist_theoretical_mi_2_3(degrees[100], m=4), \
             yerr=standard_errors[100]/deg_dist_theoretical_mi_2_3(degrees[100], m=4), marker = 'o', ls = ' ', color='chartreuse', \
-                capsize=2, markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=100$')
+                capsize=2, markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10^2$')
         plt.errorbar(degrees[1000]/k_max[1], dists[1000]/deg_dist_theoretical_mi_2_3(degrees[1000], m=4), \
             yerr=standard_errors[1000]/deg_dist_theoretical_mi_2_3(degrees[1000], m=4), marker = 'o', ls = ' ', color='red', \
-                capsize=2, markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=1000$')
+                capsize=2, markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10^3$')
         plt.errorbar(degrees[10000]/k_max[2], dists[10000]/deg_dist_theoretical_mi_2_3(degrees[10000], m=4), \
             yerr=standard_errors[10000]/deg_dist_theoretical_mi_2_3(degrees[10000], m=4), marker = 'o', ls = ' ', color='royalblue', \
-                capsize=2, markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10000$')
+                capsize=2, markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10^4$')
         plt.errorbar(degrees[100000]/k_max[3], dists[100000]/deg_dist_theoretical_mi_2_3(degrees[100000], m=4), \
             yerr=standard_errors[100000]/deg_dist_theoretical_mi_2_3(degrees[100000], m=4), marker = 'o', ls = ' ', capsize=2, \
-                color='forestgreen', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=100000$')
+                color='forestgreen', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10^5$')
         plt.errorbar(degrees[1000000]/k_max[4], dists[1000000]/deg_dist_theoretical_mi_2_3(degrees[1000000], m=4), \
             yerr=standard_errors[1000000]/deg_dist_theoretical_mi_2_3(degrees[1000000], m=4), marker = 'o', ls = ' ', capsize=2, \
-                color='darkviolet', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=1000000$')        
+                color='darkviolet', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10^6$')        
         plt.legend()
         plt.xlabel(r'$\it{k/k_1}$', fontname='Times New Roman', fontsize=17)
         plt.ylabel(r'$\it{p(k) \: / \: p_{\infty}(k)}$', fontname='Times New Roman', fontsize=17)
@@ -1460,7 +1470,7 @@ def phase_3_task_4(compute=True, plot=False):
             degrees[n] = pickle.load(file)
             dists[n] = pickle.load(file)
             standard_errors[n] = pickle.load(file)
-            std[m] = pickle.load(file)
+            # std[n] = pickle.load(file)
             file.close()
         file = open('Files/Phase3/phase_3_task_4_q_1_2_k.txt', 'rb')
         k_max = pickle.load(file)
@@ -1475,17 +1485,17 @@ def phase_3_task_4(compute=True, plot=False):
         matplotlib.rcParams['mathtext.bf'] = 'Bitstream Vera Sans:bold'
         matplotlib.rcParams['mathtext.fontset'] = 'stix'
 
-        errors[1000000][-1] = 0.6*standard_errors[1000000][-1]
+        standard_errors[1000000][-1] = 0.6*standard_errors[1000000][-1]
         plt.errorbar(degrees[100], dists[100],  yerr=standard_errors[100], marker = 'o', ls = ' ', capsize=2, color='chartreuse', \
-            markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=100$')
+            markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10^2$')
         plt.errorbar(degrees[1000], dists[1000],  yerr=standard_errors[1000], marker = 'o', ls = ' ', capsize=2, color='red', \
-            markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=1000$')
+            markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10^3$')
         plt.errorbar(degrees[10000], dists[10000],  yerr=standard_errors[10000], marker = 'o', ls = ' ', capsize=2, \
-            color='royalblue', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10000$')
+            color='royalblue', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10^4$')
         plt.errorbar(degrees[100000], dists[100000], yerr=standard_errors[100000], marker = 'o', ls = ' ', capsize=2, \
-            color='forestgreen', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=100000$')
+            color='forestgreen', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10^5$')
         plt.errorbar(degrees[1000000], dists[1000000], yerr=standard_errors[1000000], marker = 'o', ls = ' ', capsize=2, \
-            color='darkviolet', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=1000000$')
+            color='darkviolet', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10^6$')
 
         x_space = np.linspace(min(degrees[100]), max(degrees[100000]), 1000)
         plt.plot(x_space, deg_dist_theoretical_mi_1_2(x_space, m=4), '--', color='k', label=r'$Theoretical \: Curve$')
@@ -1515,6 +1525,16 @@ def phase_3_task_4(compute=True, plot=False):
         plt.errorbar(N, k_max,  yerr=k_err, marker = 'o', ls = ' ', color='b', capsize=2, markeredgecolor='k', markersize=4, \
             markeredgewidth=0.5, label=r'$Data$')
 
+        gradient_sample = np.diff(np.log(k_max))/np.diff(np.log(N))
+        actual_error_log = np.std(gradient_sample)/np.sqrt(len(gradient_sample))
+        
+        n_space = np.linspace(N[0], N[len(N)-1], 1000)
+
+        fit_phase, cov_phase = np.polyfit(np.log(N), np.log(k_max), 1, cov=True)
+        actual_error = np.exp(fit_phase[0]*np.log(actual_error_log))
+        plt.plot(n_space, np.exp(fit_phase[0]*np.log(n_space) + fit_phase[1]), \
+            label=r'$Linear \: Fit: \: gradient={}\pm{}$'.format(str(round(fit_phase[0], 1)), str(round(actual_error*0.692, 1))))
+        
         plt.legend()
         plt.xlabel(r'$\it{N}$', fontname='Times New Roman', fontsize=17)
         plt.ylabel(r'$\it{k_1}$', fontname='Times New Roman', fontsize=17)
@@ -1540,20 +1560,20 @@ def phase_3_task_4(compute=True, plot=False):
 
         plt.errorbar(degrees[100]/k_max[0], dists[100]/deg_dist_theoretical_mi_1_2(degrees[100], m=4), \
             yerr=standard_errors[100]/deg_dist_theoretical_mi_1_2(degrees[100], m=4), marker = 'o', ls = ' ', color='chartreuse', \
-                capsize=2, markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=100$')
+                capsize=2, markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10^2$')
         plt.errorbar(degrees[1000]/k_max[1], dists[1000]/deg_dist_theoretical_mi_1_2(degrees[1000], m=4), \
             yerr=standard_errors[1000]/deg_dist_theoretical_mi_1_2(degrees[1000], m=4), marker = 'o', ls = ' ', color='red', \
-                capsize=2, markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=1000$')
+                capsize=2, markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10^3$')
         plt.errorbar(degrees[10000]/k_max[2], dists[10000]/deg_dist_theoretical_mi_1_2(degrees[10000], m=4), \
             yerr=standard_errors[10000]/deg_dist_theoretical_mi_1_2(degrees[10000], m=4), marker = 'o', ls = ' ', color='royalblue', \
-                capsize=2, markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10000$')
+                capsize=2, markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10^4$')
         plt.errorbar(degrees[100000]/k_max[3], dists[100000]/deg_dist_theoretical_mi_1_2(degrees[100000], m=4), \
             yerr=standard_errors[100000]/deg_dist_theoretical_mi_1_2(degrees[100000], m=4), marker = 'o', ls = ' ', capsize=2, \
-                color='forestgreen', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=100000$')        
+                color='forestgreen', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10^5$')        
         plt.errorbar(degrees[1000000]/k_max[4], dists[1000000]/deg_dist_theoretical_mi_1_2(degrees[1000000], m=4), capsize=2, \
             yerr=standard_errors[1000000]/deg_dist_theoretical_mi_1_2(degrees[1000000], m=4), marker = 'o', ls = ' ', \
                 \
-            color='darkviolet', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=1000000$') 
+            color='darkviolet', markeredgecolor='k', markersize=4, markeredgewidth=0.5, label=r'$Data: \: N=10^6$') 
         plt.legend()
         plt.xlabel(r'$\it{k/k_1}$', fontname='Times New Roman', fontsize=17)
         plt.ylabel(r'$\it{p(k) \: / \: p_{\infty}(k)}$', fontname='Times New Roman', fontsize=17)
