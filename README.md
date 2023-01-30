@@ -9,7 +9,7 @@ The repository contains:
 - A file that contains the mathetmatical models `./model.py`
 - A file that tests the mathematical models `./testing_model.py`
 - A file that log-bins data `./logbin2020.py`
-- A folder with all saved files `./files`
+- A directory with all saved files `./files`
 - A directory with all plots produced for the report `./plots`
 - A directory with all files from preliminary runs `./old_files`
 - A directory with all plots from preliminary runs `./old_plots`
